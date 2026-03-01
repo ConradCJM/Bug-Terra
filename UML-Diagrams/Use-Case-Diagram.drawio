@@ -99,7 +99,7 @@
           <mxGeometry height="51" width="99" x="484" y="381.5" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-18" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Upload images/videos (media)" vertex="1">
-          <mxGeometry height="73" width="116" x="503" y="481" as="geometry" />
+          <mxGeometry height="58" width="115" x="503" y="496" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-19" edge="1" parent="1" source="FUIms9LGi32ikloTW9Qt-13" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=1;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
