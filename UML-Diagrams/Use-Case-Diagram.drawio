@@ -61,16 +61,19 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Bug Details" vertex="1">
-          <mxGeometry height="80" width="120" x="145" y="338.5" as="geometry" />
+          <mxGeometry height="80" width="120" x="-290" y="227" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Change Bug Status" vertex="1">
-          <mxGeometry height="80" width="120" x="145" y="466" as="geometry" />
+          <mxGeometry height="80" width="120" x="-130" y="251" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Resolve Bug" vertex="1">
-          <mxGeometry height="80" width="120" x="145" y="571" as="geometry" />
+          <mxGeometry height="80" width="120" x="-321" y="366" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Update Bug Information" vertex="1">
           <mxGeometry height="80" width="120" x="-156" y="392" as="geometry" />
+        </mxCell>
+        <mxCell id="FUIms9LGi32ikloTW9Qt-9" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Comments" vertex="1">
+          <mxGeometry height="80" width="120" x="-334" y="489" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
