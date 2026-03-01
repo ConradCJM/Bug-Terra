@@ -10,7 +10,7 @@
         <mxCell id="qe5K-ytFm6u9t2Apd8dK-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Bug Report System" vertex="1">
           <mxGeometry height="60" width="120" x="299" y="180" as="geometry" />
         </mxCell>
-        <mxCell id="qe5K-ytFm6u9t2Apd8dK-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+        <mxCell id="qe5K-ytFm6u9t2Apd8dK-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=default;gradientColor=none;fillColor=default;" value="" vertex="1">
           <mxGeometry height="419" width="25" x="-0.5" y="249" as="geometry" />
         </mxCell>
         <mxCell id="qe5K-ytFm6u9t2Apd8dK-4" edge="1" parent="1" source="qe5K-ytFm6u9t2Apd8dK-5" style="endArrow=none;dashed=1;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="">
@@ -27,6 +27,12 @@
         </mxCell>
         <mxCell id="qe5K-ytFm6u9t2Apd8dK-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="60" width="20" x="349" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="qe5K-ytFm6u9t2Apd8dK-8" edge="1" parent="1" source="qe5K-ytFm6u9t2Apd8dK-2" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=1.02;exitY=0.064;exitDx=0;exitDy=0;exitPerimeter=0;spacing=0;" target="qe5K-ytFm6u9t2Apd8dK-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="170" y="480" as="sourcePoint" />
+            <mxPoint x="220" y="430" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
