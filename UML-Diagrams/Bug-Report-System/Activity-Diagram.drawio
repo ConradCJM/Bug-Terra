@@ -1,9 +1,59 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0" version="29.6.0">
   <diagram name="Page-1" id="JPjIRQgQ-wSni4J4-SbE">
-    <mxGraphModel>
+    <mxGraphModel dx="1418" dy="780" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-4" edge="1" parent="1" source="VIG5tpZcG5u4ZCHdmD9X-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="VIG5tpZcG5u4ZCHdmD9X-3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-2" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start" value="User on &quot;Create Bug&quot; UI" vertex="1">
+          <mxGeometry height="78" width="190" x="99" y="288" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-6" edge="1" parent="1" source="VIG5tpZcG5u4ZCHdmD9X-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="VIG5tpZcG5u4ZCHdmD9X-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-3" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start" value="User Enters Bug Title" vertex="1">
+          <mxGeometry height="78" width="190" x="99" y="441" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-8" edge="1" parent="1" source="VIG5tpZcG5u4ZCHdmD9X-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="VIG5tpZcG5u4ZCHdmD9X-7" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-5" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start" value="User Selects Category" vertex="1">
+          <mxGeometry height="78" width="190" x="99" y="581" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-15" edge="1" parent="1" source="VIG5tpZcG5u4ZCHdmD9X-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=178.573;exitDy=11.427000000000003;exitPerimeter=0;" target="VIG5tpZcG5u4ZCHdmD9X-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="528" y="597" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-7" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start" value="User Selects Priority Level" vertex="1">
+          <mxGeometry height="78" width="190" x="349" y="581" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-14" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start" value="User Adds Notes" vertex="1">
+          <mxGeometry height="78" width="190" x="617" y="558" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&amp;lt;&amp;lt;Optional&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry height="30" width="106" x="521" y="564" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-17" edge="1" parent="1" source="VIG5tpZcG5u4ZCHdmD9X-7" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0;exitY=0;exitDx=178.573;exitDy=66.573;exitPerimeter=0;entryX=0;entryY=0;entryDx=11.427;entryDy=66.573;entryPerimeter=0;" target="VIG5tpZcG5u4ZCHdmD9X-19" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="539" y="649" as="sourcePoint" />
+            <mxPoint x="835" y="649" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-19" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start" value="User Adds Notes" vertex="1">
+          <mxGeometry height="78" width="190" x="869" y="581" as="geometry" />
+        </mxCell>
+        <mxCell id="VIG5tpZcG5u4ZCHdmD9X-20" edge="1" parent="1" source="VIG5tpZcG5u4ZCHdmD9X-14" style="endArrow=classic;html=1;rounded=0;entryX=0.053;entryY=0.231;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" target="VIG5tpZcG5u4ZCHdmD9X-19" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="807" y="604" as="sourcePoint" />
+            <mxPoint x="857" y="554" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
