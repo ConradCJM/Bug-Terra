@@ -83,7 +83,7 @@
         <mxCell id="FUIms9LGi32ikloTW9Qt-11" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Search Bugs" vertex="1">
           <mxGeometry height="59" width="99" x="168" y="606" as="geometry" />
         </mxCell>
-        <mxCell id="FUIms9LGi32ikloTW9Qt-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Bug History" vertex="1">
+        <mxCell id="FUIms9LGi32ikloTW9Qt-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View History" vertex="1">
           <mxGeometry height="56" width="121" x="210" y="171" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Personal Dashboard" vertex="1">
