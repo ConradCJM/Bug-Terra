@@ -72,13 +72,13 @@
           <mxGeometry height="80" width="120" x="-321" y="366" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Update Bug Information" vertex="1">
-          <mxGeometry height="80" width="120" x="-182" y="344" as="geometry" />
+          <mxGeometry height="60" width="120" x="456" y="510" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-9" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Comments" vertex="1">
           <mxGeometry height="60" width="109" x="553" y="317" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-10" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Uploaded Media" vertex="1">
-          <mxGeometry height="48" width="114" x="372" y="424" as="geometry" />
+          <mxGeometry height="48" width="114" x="385" y="119" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-11" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Search Bugs" vertex="1">
           <mxGeometry height="59" width="99" x="168" y="606" as="geometry" />
@@ -99,7 +99,7 @@
           <mxGeometry height="51" width="99" x="484" y="381.5" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-18" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Upload images/videos (media)" vertex="1">
-          <mxGeometry height="58" width="115" x="503" y="496" as="geometry" />
+          <mxGeometry height="58" width="115" x="369" y="398" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-19" edge="1" parent="1" source="FUIms9LGi32ikloTW9Qt-13" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;strokeWidth=1;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -107,15 +107,15 @@
             <mxPoint x="57" y="207" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="FUIms9LGi32ikloTW9Qt-23" edge="1" parent="1" source="FUIms9LGi32ikloTW9Qt-10" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="FUIms9LGi32ikloTW9Qt-5" value="">
+        <mxCell id="FUIms9LGi32ikloTW9Qt-23" edge="1" parent="1" source="FUIms9LGi32ikloTW9Qt-10" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="265" y="345" as="sourcePoint" />
-            <mxPoint x="315" y="295" as="targetPoint" />
+            <mxPoint x="439" y="207" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-24" connectable="0" parent="FUIms9LGi32ikloTW9Qt-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt;Excludes&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry relative="1" x="-0.3171" y="2" as="geometry">
-            <mxPoint x="-15" y="-10" as="offset" />
+            <mxPoint x="-1" y="-2" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-26" edge="1" parent="1" source="FUIms9LGi32ikloTW9Qt-5" style="endArrow=classic;html=1;rounded=0;exitX=0.1;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;" target="FUIms9LGi32ikloTW9Qt-13" value="">
@@ -222,6 +222,17 @@
         <mxCell id="FUIms9LGi32ikloTW9Qt-47" connectable="0" parent="FUIms9LGi32ikloTW9Qt-46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt;Excludes&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2454" y="1" as="geometry">
             <mxPoint x="-1" y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FUIms9LGi32ikloTW9Qt-50" edge="1" parent="1" source="FUIms9LGi32ikloTW9Qt-18" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="FUIms9LGi32ikloTW9Qt-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="898" y="482" as="sourcePoint" />
+            <mxPoint x="739" y="709" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FUIms9LGi32ikloTW9Qt-51" connectable="0" parent="FUIms9LGi32ikloTW9Qt-50" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt;Excludes&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2454" y="1" as="geometry">
+            <mxPoint y="3" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
