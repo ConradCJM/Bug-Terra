@@ -66,6 +66,9 @@
         <mxCell id="FUIms9LGi32ikloTW9Qt-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Change Bug Status" vertex="1">
           <mxGeometry height="80" width="120" x="145" y="466" as="geometry" />
         </mxCell>
+        <mxCell id="FUIms9LGi32ikloTW9Qt-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Resolve Bug" vertex="1">
+          <mxGeometry height="80" width="120" x="145" y="571" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
