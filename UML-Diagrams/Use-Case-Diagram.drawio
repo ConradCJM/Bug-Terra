@@ -93,7 +93,7 @@
           <mxGeometry height="80" width="120" x="-161" y="101" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-16" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Drop &amp;amp; Drag Cards" vertex="1">
-          <mxGeometry height="80" width="120" x="-46" y="558" as="geometry" />
+          <mxGeometry height="80" width="120" x="123" y="578" as="geometry" />
         </mxCell>
         <mxCell id="FUIms9LGi32ikloTW9Qt-17" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Add Comment" vertex="1">
           <mxGeometry height="80" width="120" x="-344" y="50" as="geometry" />
