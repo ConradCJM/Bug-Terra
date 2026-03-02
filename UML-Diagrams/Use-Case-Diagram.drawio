@@ -313,23 +313,23 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Add developer to team" vertex="1">
-          <mxGeometry height="60" width="106" x="384" y="590" as="geometry" />
+          <mxGeometry height="60" width="106" x="559" y="586" as="geometry" />
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-2" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Remove developer from team" vertex="1">
-          <mxGeometry height="60" width="106" x="384" y="670" as="geometry" />
+          <mxGeometry height="60" width="106" x="559" y="666" as="geometry" />
         </mxCell>
-        <mxCell id="m5J3y3CPcg2YNbQqJoxi-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Developer&lt;div&gt;team&lt;/div&gt;" vertex="1">
-          <mxGeometry height="63" width="99" x="168" y="677" as="geometry" />
+        <mxCell id="m5J3y3CPcg2YNbQqJoxi-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Manage Developer&lt;div&gt;team&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="99" x="350" y="673" as="geometry" />
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Update Developer Team Data" vertex="1">
-          <mxGeometry height="69" width="120" x="749" y="626" as="geometry" />
+          <mxGeometry height="69" width="120" x="924" y="622" as="geometry" />
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Validate Developer" vertex="1">
-          <mxGeometry height="65" width="115" x="555" y="570" as="geometry" />
+          <mxGeometry height="65" width="115" x="730" y="566" as="geometry" />
         </mxCell>
-        <mxCell id="m5J3y3CPcg2YNbQqJoxi-6" edge="1" parent="1" source="m5J3y3CPcg2YNbQqJoxi-3" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" value="">
+        <mxCell id="m5J3y3CPcg2YNbQqJoxi-6" edge="1" parent="1" source="kBPy60gOFu-0GedxbhaH-7" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="107" y="846" as="sourcePoint" />
+            <mxPoint x="114" y="709" as="sourcePoint" />
             <mxPoint x="13" y="316" as="targetPoint" />
           </mxGeometry>
         </mxCell>
@@ -411,6 +411,20 @@
         <mxCell id="kBPy60gOFu-0GedxbhaH-6" connectable="0" parent="kBPy60gOFu-0GedxbhaH-5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt;Excludes&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2454" y="1" as="geometry">
             <mxPoint x="-30" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kBPy60gOFu-0GedxbhaH-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="View Developer Team" vertex="1">
+          <mxGeometry height="70" width="99" x="162" y="674" as="geometry" />
+        </mxCell>
+        <mxCell id="kBPy60gOFu-0GedxbhaH-10" edge="1" parent="1" source="m5J3y3CPcg2YNbQqJoxi-3" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="kBPy60gOFu-0GedxbhaH-7" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="1233" y="588" as="sourcePoint" />
+            <mxPoint x="1108" y="654" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kBPy60gOFu-0GedxbhaH-11" connectable="0" parent="kBPy60gOFu-0GedxbhaH-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt;Excludes&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2454" y="1" as="geometry">
+            <mxPoint x="-11" y="-11" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
