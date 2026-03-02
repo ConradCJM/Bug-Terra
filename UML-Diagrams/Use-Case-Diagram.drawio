@@ -322,7 +322,7 @@
           <mxGeometry height="63" width="99" x="350" y="673" as="geometry" />
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Update Developer Team Data" vertex="1">
-          <mxGeometry height="69" width="120" x="924" y="622" as="geometry" />
+          <mxGeometry height="69" width="120" x="910" y="623" as="geometry" />
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Validate Developer" vertex="1">
           <mxGeometry height="65" width="115" x="730" y="566" as="geometry" />
@@ -374,7 +374,7 @@
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-14" connectable="0" parent="m5J3y3CPcg2YNbQqJoxi-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;" value="&amp;lt;&amp;lt;Includes&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry relative="1" x="0.0927" y="1" as="geometry">
-            <mxPoint x="-19" y="-18" as="offset" />
+            <mxPoint x="1" y="-14" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="m5J3y3CPcg2YNbQqJoxi-16" edge="1" parent="1" source="m5J3y3CPcg2YNbQqJoxi-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;flowAnimation=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="m5J3y3CPcg2YNbQqJoxi-5">
