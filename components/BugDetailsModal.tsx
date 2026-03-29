@@ -151,7 +151,10 @@ export default function BugDetailsModal({
               <button className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded transition-colors">
                 Change Status
               </button>
-              <button className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 px-4 rounded transition-colors">
+              <button
+                onClick={onClose}
+                className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 px-4 rounded transition-colors"
+              >
                 Close
               </button>
             </div>
