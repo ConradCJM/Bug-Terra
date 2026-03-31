@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function Navigation() {
   const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path: string) => pathname === path;
 
@@ -55,7 +57,11 @@ export default function Navigation() {
 
           {/* Mobile Menu Button (placeholder) */}
           <div className="md:hidden">
-            <button className="text-slate-300 hover:text-white">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-slate-300 hover:text-white"
+              aria-label="Toggle menu"
+            >
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -72,6 +78,45 @@ export default function Navigation() {
             </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden pb-4 space-y-2">
+            <Link
+              href="/"
+              className={`block py-2 px-4 rounded transition-colors ${
+                isActive("/")
+                  ? "bg-blue-500 text-white"
+                  : "text-slate-300 hover:bg-slate-700 hover:text-white"
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              href="/dashboard"
+              className={`block py-2 px-4 rounded transition-colors ${
+                isActive("/dashboard")
+                  ? "bg-blue-500 text-white"
+                  : "text-slate-300 hover:bg-slate-700 hover:text-white"
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/report-bug"
+              className={`block py-2 px-4 rounded transition-colors ${
+                isActive("/report-bug")
+                  ? "bg-blue-500 text-white"
+                  : "text-slate-300 hover:bg-slate-700 hover:text-white"
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Report Bug
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );

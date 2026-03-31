@@ -37,7 +37,7 @@ export default function Home() {
               </svg>
             </Link>
             <Link
-              href="/report"
+              href="/report-bug"
               className="inline-flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
             >
               Report a Bug
