@@ -5,7 +5,7 @@ interface Bug {
   name: string;
   category: string;
   priority: "low" | "medium" | "high" | "critical";
-  status: string;
+  status: "todo" | "in-progress" | "review" | "done";
   reporter: string;
   createdAt: string;
 }
@@ -17,7 +17,12 @@ const PRIORITY_BADGES = {
   critical: "bg-red-100 text-red-800",
 };
 
-export default function RecentBugsSection({ bugs }: { bugs: Bug[] }) {
+interface RecentBugsSectionProps {
+  bugs: Bug[];
+  onBugClick: (bug: Bug) => void;
+}
+
+export default function RecentBugsSection({ bugs, onBugClick }: RecentBugsSectionProps) {
   return (
     <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
       {/* Header */}
@@ -34,7 +39,9 @@ export default function RecentBugsSection({ bugs }: { bugs: Bug[] }) {
           bugs.map((bug) => (
             <div
               key={bug.id}
-              className="px-6 py-4 hover:bg-slate-700/30 transition-colors cursor-pointer group"
+              className="px-6 py-4 hover:bg-slate-700/30 transition-colors cursor-pointer group relative"
+              onClick={() => onBugClick(bug)}
+              title="Click to open details"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">

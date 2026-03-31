@@ -3,6 +3,7 @@
 import { useState } from "react";
 import BugCard from "@/components/BugCard";
 import RecentBugsSection from "@/components/RecentBugsSection";
+import BugDetailsModal from "@/components/BugDetailsModal";
 
 interface Bug {
   id: string;
@@ -81,6 +82,13 @@ const KANBAN_COLUMNS = [
 
 export default function Dashboard() {
   const [bugs, setBugs] = useState<Bug[]>(PLACEHOLDER_BUGS);
+  const [selectedBug, setSelectedBug] = useState<Bug | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const handleBugClick = (bug: Bug) => {
+    setSelectedBug(bug);
+    setIsDetailsOpen(true);
+  };
 
   const getBugsByStatus = (status: string) => {
     return bugs.filter((bug) => bug.status === status);
@@ -104,7 +112,7 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Recent Bugs Section */}
         <div className="mb-12">
-          <RecentBugsSection bugs={recentBugs.slice(0, 5)} />
+          <RecentBugsSection bugs={recentBugs.slice(0, 5)} onBugClick={handleBugClick} />
         </div>
 
         {/* Kanban Board */}
@@ -143,6 +151,15 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Bug Details Modal */}
+      {selectedBug && (
+        <BugDetailsModal
+          bug={selectedBug as Bug & { status: "todo" | "in-progress" | "review" | "done" }}
+          isOpen={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+        />
+      )}
     </div>
   );
 }

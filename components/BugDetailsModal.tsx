@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
+
 interface Bug {
   id: string;
   name: string;
@@ -30,33 +32,174 @@ interface BugDetailsModalProps {
   onClose: () => void;
 }
 
+type ResizeHandle = "nw" | "ne" | "sw" | "se" | "n" | "s" | "e" | "w" | null;
+
 export default function BugDetailsModal({
   bug,
   isOpen,
   onClose,
 }: BugDetailsModalProps) {
+  const [width, setWidth] = useState(600);
+  const [height, setHeight] = useState(500);
+  const [isResizing, setIsResizing] = useState<ResizeHandle>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const MIN_WIDTH = 300;
+  const MAX_WIDTH = 90;
+  const MIN_HEIGHT = 300;
+  const MAX_HEIGHT = 90;
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!modalRef.current) return;
+
+      const rect = modalRef.current.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      const maxWidth = (windowWidth * MAX_WIDTH) / 100;
+      const maxHeight = (windowHeight * MAX_HEIGHT) / 100;
+
+      let newWidth = width;
+      let newHeight = height;
+
+      if (isResizing.includes("e")) {
+        newWidth = Math.min(
+          Math.max(e.clientX - rect.left, MIN_WIDTH),
+          maxWidth
+        );
+      }
+      if (isResizing.includes("s")) {
+        newHeight = Math.min(
+          Math.max(e.clientY - rect.top, MIN_HEIGHT),
+          maxHeight
+        );
+      }
+      if (isResizing.includes("w")) {
+        const newW = Math.min(
+          Math.max(rect.right - e.clientX, MIN_WIDTH),
+          maxWidth
+        );
+        if (newW !== width) {
+          newWidth = newW;
+        }
+      }
+      if (isResizing.includes("n")) {
+        const newH = Math.min(
+          Math.max(rect.bottom - e.clientY, MIN_HEIGHT),
+          maxHeight
+        );
+        if (newH !== height) {
+          newHeight = newH;
+        }
+      }
+
+      setWidth(newWidth);
+      setHeight(newHeight);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(null);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing, width, height]);
+
+  const getCursorStyle = (handle: ResizeHandle): string => {
+    const cursorMap: Record<string, string> = {
+      nw: "nwse-resize",
+      ne: "nesw-resize",
+      sw: "nesw-resize",
+      se: "nwse-resize",
+      n: "ns-resize",
+      s: "ns-resize",
+      e: "ew-resize",
+      w: "ew-resize",
+    };
+    return cursorMap[handle || ""] || "default";
+  };
+
+  const ResizeHandle = ({ handle }: { handle: ResizeHandle }) => {
+    const positionClasses: Record<string, string> = {
+      nw: "top-0 left-0 cursor-nwse-resize",
+      ne: "top-0 right-0 cursor-nesw-resize",
+      sw: "bottom-0 left-0 cursor-nesw-resize",
+      se: "bottom-0 right-0 cursor-nwse-resize",
+      n: "top-0 left-1/2 -translate-x-1/2 cursor-ns-resize",
+      s: "bottom-0 left-1/2 -translate-x-1/2 cursor-ns-resize",
+      e: "top-1/2 right-0 -translate-y-1/2 cursor-ew-resize",
+      w: "top-1/2 left-0 -translate-y-1/2 cursor-ew-resize",
+    };
+
+    const sizeClasses = {
+      nw: "w-3 h-3",
+      ne: "w-3 h-3",
+      sw: "w-3 h-3",
+      se: "w-3 h-3",
+      n: "w-8 h-1",
+      s: "w-8 h-1",
+      e: "w-1 h-8",
+      w: "w-1 h-8",
+    };
+
+    return (
+      <div
+        onMouseDown={() => setIsResizing(handle)}
+        className={`absolute ${positionClasses[handle!]} ${
+          sizeClasses[handle as keyof typeof sizeClasses]
+        } bg-slate-400 hover:bg-slate-500 rounded opacity-0 hover:opacity-100 transition-opacity pointer-events-auto`}
+        style={{ cursor: getCursorStyle(handle) }}
+      />
+    );
+  };
+
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Blurred Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"
+        className="fixed inset-0 backdrop-blur-lg bg-black/20 z-40 transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-96 overflow-auto">
+      {/* Modal Container */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+        <div
+          ref={modalRef}
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+          }}
+          className="pointer-events-auto relative bg-white rounded-lg shadow-2xl overflow-hidden flex flex-col"
+        >
+          {/* Resize Handles */}
+          <ResizeHandle handle="nw" />
+          <ResizeHandle handle="ne" />
+          <ResizeHandle handle="sw" />
+          <ResizeHandle handle="se" />
+          <ResizeHandle handle="n" />
+          <ResizeHandle handle="s" />
+          <ResizeHandle handle="e" />
+          <ResizeHandle handle="w" />
+
           {/* Header */}
-          <div className="bg-gradient-to-r from-slate-800 to-slate-700 px-6 py-4 flex items-start justify-between border-b border-slate-200">
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 px-6 py-4 flex items-start justify-between border-b border-slate-200 flex-shrink-0">
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-white">{bug.name}</h2>
               <p className="text-slate-300 text-sm mt-1">Bug ID: {bug.id}</p>
             </div>
             <button
               onClick={onClose}
-              className="text-slate-300 hover:text-white transition-colors ml-4"
+              className="text-slate-300 hover:text-white transition-colors ml-4 flex-shrink-0"
             >
               <svg
                 className="w-6 h-6"
@@ -74,8 +217,8 @@ export default function BugDetailsModal({
             </button>
           </div>
 
-          {/* Content */}
-          <div className="px-6 py-6">
+          {/* Content - Scrollable */}
+          <div className="px-6 py-6 overflow-y-auto flex-1">
             {/* Badges Row */}
             <div className="flex flex-wrap gap-3 mb-6">
               <span
@@ -133,7 +276,7 @@ export default function BugDetailsModal({
               </div>
             </div>
 
-            {/* Notes Section (Placeholder) */}
+            {/* Notes Section */}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Notes
@@ -142,22 +285,22 @@ export default function BugDetailsModal({
                 No notes provided yet.
               </div>
             </div>
+          </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 border-t border-slate-200 pt-6">
-              <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors">
-                Add Comment
-              </button>
-              <button className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded transition-colors">
-                Change Status
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 px-4 rounded transition-colors"
-              >
-                Close
-              </button>
-            </div>
+          {/* Action Buttons - Always Visible */}
+          <div className="flex gap-3 border-t border-slate-200 px-6 py-4 bg-slate-50 flex-shrink-0">
+            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm">
+              Add Comment
+            </button>
+            <button className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm">
+              Change Status
+            </button>
+            <button
+              onClick={onClose}
+              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 px-4 rounded transition-colors text-sm"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
