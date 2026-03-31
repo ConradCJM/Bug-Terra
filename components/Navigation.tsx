@@ -42,9 +42,9 @@ export default function Navigation() {
               Dashboard
             </Link>
             <Link
-              href="/report"
+              href="/report-bug"
               className={`transition-colors ${
-                isActive("/report")
+                isActive("/report-bug")
                   ? "text-blue-400 border-b-2 border-blue-400"
                   : "text-slate-300 hover:text-white"
               } pb-2`}

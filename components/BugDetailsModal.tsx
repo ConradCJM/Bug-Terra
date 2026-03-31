@@ -12,6 +12,13 @@ interface Bug {
   createdAt: string;
 }
 
+interface Attachment {
+  id: string;
+  file: File;
+  url: string;
+  type: "image" | "video";
+}
+
 const PRIORITY_COLORS = {
   low: "bg-green-100 text-green-800 border-green-300",
   medium: "bg-yellow-100 text-yellow-800 border-yellow-300",
@@ -42,6 +49,8 @@ export default function BugDetailsModal({
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(500);
   const [isResizing, setIsResizing] = useState<ResizeHandle>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const MIN_WIDTH = 300;
@@ -49,8 +58,58 @@ export default function BugDetailsModal({
   const MIN_HEIGHT = 300;
   const MAX_HEIGHT = 90;
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const isImage = file.type.startsWith("image/");
+      const isVideo = file.type.startsWith("video/");
+
+      if (!isImage && !isVideo) {
+        alert("Please upload only images or videos");
+        continue;
+      }
+
+      const url = URL.createObjectURL(file);
+      const attachment: Attachment = {
+        id: `${Date.now()}-${i}`,
+        file,
+        url,
+        type: isImage ? "image" : "video",
+      };
+
+      setAttachments((prev) => [...prev, attachment]);
+    }
+
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleDeleteAttachment = (id: string) => {
+    setAttachments((prev) => {
+      const attachment = prev.find((a) => a.id === id);
+      if (attachment) {
+        URL.revokeObjectURL(attachment.url);
+      }
+      return prev.filter((a) => a.id !== id);
+    });
+  };
+
   useEffect(() => {
-    if (!isResizing) return;
+    return () => {
+      // Cleanup: revoke all object URLs when component unmounts
+      attachments.forEach((attachment) => {
+        URL.revokeObjectURL(attachment.url);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isResizing || !modalRef.current) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!modalRef.current) return;
@@ -284,6 +343,70 @@ export default function BugDetailsModal({
               <div className="bg-slate-50 rounded p-3 text-slate-600 text-sm border border-slate-200">
                 No notes provided yet.
               </div>
+            </div>
+
+            {/* File Upload Section */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Attachments
+              </label>
+              <div className="mb-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*,video/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Upload Screenshot/Video
+                </button>
+              </div>
+
+              {/* Attachments Grid */}
+              {attachments.length > 0 && (
+                <div className="grid grid-cols-2 gap-3">
+                  {attachments.map((attachment) => (
+                    <div
+                      key={attachment.id}
+                      className="relative group bg-slate-100 rounded overflow-hidden border border-slate-200"
+                    >
+                      {attachment.type === "image" ? (
+                        <img
+                          src={attachment.url}
+                          alt="Screenshot"
+                          className="w-full h-32 object-cover"
+                        />
+                      ) : (
+                        <video
+                          src={attachment.url}
+                          className="w-full h-32 object-cover bg-black"
+                          controls
+                        />
+                      )}
+                      <button
+                        onClick={() => handleDeleteAttachment(attachment.id)}
+                        className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Delete attachment"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                      <p className="text-xs text-slate-600 p-1 truncate bg-slate-50">
+                        {attachment.file.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
