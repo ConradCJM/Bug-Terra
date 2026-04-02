@@ -19,6 +19,12 @@ interface Attachment {
   type: "image" | "video";
 }
 
+interface Comment {
+  id: string;
+  text: string;
+  timestamp: string;
+}
+
 const PRIORITY_COLORS = {
   low: "bg-green-100 text-green-800 border-green-300",
   medium: "bg-yellow-100 text-yellow-800 border-yellow-300",
@@ -50,6 +56,8 @@ export default function BugDetailsModal({
   const [height, setHeight] = useState(500);
   const [isResizing, setIsResizing] = useState<ResizeHandle>(null);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState<Comment[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -97,6 +105,19 @@ export default function BugDetailsModal({
       }
       return prev.filter((a) => a.id !== id);
     });
+  };
+
+  const handleSubmitComment = () => {
+    if (comment.trim()) {
+      const newComment: Comment = {
+        id: `${Date.now()}`,
+        text: comment,
+        timestamp: new Date().toLocaleString(),
+      };
+      setComments((prev) => [...prev, newComment]);
+      console.log("Comment submitted:", comment);
+      setComment("");
+    }
   };
 
   useEffect(() => {
@@ -408,13 +429,50 @@ export default function BugDetailsModal({
                 </div>
               )}
             </div>
+
+            {/* Comments Display Section */}
+            {comments.length > 0 && (
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
+                  Comments ({comments.length})
+                </label>
+                <div className="space-y-3">
+                  {comments.map((cmt) => (
+                    <div
+                      key={cmt.id}
+                      className="bg-slate-50 border border-slate-200 rounded p-3"
+                    >
+                      <p className="text-slate-700 text-sm">{cmt.text}</p>
+                      <p className="text-xs text-slate-500 mt-1">{cmt.timestamp}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Comment Input Section */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Add Comment
+              </label>
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Add your comment here..."
+                className="w-full min-h-20 bg-slate-50 border border-slate-200 rounded p-3 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              />
+              <button
+                onClick={handleSubmitComment}
+                disabled={!comment.trim()}
+                className="mt-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded transition-colors text-sm"
+              >
+                Submit Comment
+              </button>
+            </div>
           </div>
 
           {/* Action Buttons - Always Visible */}
           <div className="flex gap-3 border-t border-slate-200 px-6 py-4 bg-slate-50 flex-shrink-0">
-            <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm">
-              Add Comment
-            </button>
             <button className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm">
               Change Status
             </button>
