@@ -199,7 +199,7 @@ export default function ReportBug() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:bg-slate-950">
       {/* Header */}
-      <header className="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm sticky top-0 z-10">
+      <header className="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-white">Report a Bug</h1>
           <p className="text-slate-400 mt-2">Help us improve by reporting issues you encounter</p>

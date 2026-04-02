@@ -17,7 +17,7 @@ export default function Navigation() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="text-xl font-bold text-white">
-              🐛 BugTracker
+              🐛 BugTerra
             </Link>
           </div>
 
