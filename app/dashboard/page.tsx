@@ -13,6 +13,19 @@ interface Bug {
   status: "todo" | "in-progress" | "review" | "done";
   reporter: string;
   createdAt: string;
+  history?: BugHistory[];
+}
+
+interface BugHistory {
+  id: string;
+  bugId: string;
+  timestamp: string;
+  actor: string;
+  actionType: string;
+  fieldName?: string;
+  oldValue?: string;
+  newValue?: string;
+  description: string;
 }
 
 // Placeholder data
@@ -25,6 +38,54 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "in-progress",
     reporter: "John Doe",
     createdAt: "2026-03-29",
+    history: [
+      {
+        id: "h1",
+        bugId: "1",
+        timestamp: "2026-03-29T14:15:00Z",
+        actor: "John Doe",
+        actionType: "created",
+        description: "Created bug: Login button not responding",
+      },
+      {
+        id: "h2",
+        bugId: "1",
+        timestamp: "2026-03-29T15:45:00Z",
+        actor: "Jane Smith",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "todo",
+        newValue: "in-progress",
+        description: "Status changed from To Do to In Progress",
+      },
+      {
+        id: "h3",
+        bugId: "1",
+        timestamp: "2026-03-30T10:20:00Z",
+        actor: "Mike Johnson",
+        actionType: "comment_added",
+        description: "Added comment: I can reproduce this on Chrome 89",
+      },
+      {
+        id: "h4",
+        bugId: "1",
+        timestamp: "2026-03-30T11:00:00Z",
+        actor: "John Doe",
+        actionType: "priority_changed",
+        fieldName: "priority",
+        oldValue: "high",
+        newValue: "critical",
+        description: "Priority changed from High to Critical",
+      },
+      {
+        id: "h5",
+        bugId: "1",
+        timestamp: "2026-03-30T13:30:00Z",
+        actor: "Emma Wilson",
+        actionType: "file_added",
+        description: "File added: screenshot-bug.png",
+      },
+    ],
   },
   {
     id: "2",
@@ -34,6 +95,24 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "todo",
     reporter: "Jane Smith",
     createdAt: "2026-03-28",
+    history: [
+      {
+        id: "h6",
+        bugId: "2",
+        timestamp: "2026-03-28T09:00:00Z",
+        actor: "Jane Smith",
+        actionType: "created",
+        description: "Created bug: Database connection timeout",
+      },
+      {
+        id: "h7",
+        bugId: "2",
+        timestamp: "2026-03-29T16:30:00Z",
+        actor: "Mike Johnson",
+        actionType: "comment_added",
+        description: "Added comment: Check connection pool settings",
+      },
+    ],
   },
   {
     id: "3",
@@ -43,6 +122,27 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "review",
     reporter: "Mike Johnson",
     createdAt: "2026-03-27",
+    history: [
+      {
+        id: "h8",
+        bugId: "3",
+        timestamp: "2026-03-27T11:00:00Z",
+        actor: "Mike Johnson",
+        actionType: "created",
+        description: "Created bug: CSS not loading on mobile",
+      },
+      {
+        id: "h9",
+        bugId: "3",
+        timestamp: "2026-03-28T14:20:00Z",
+        actor: "Emma Wilson",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "in-progress",
+        newValue: "review",
+        description: "Status changed from In Progress to Review",
+      },
+    ],
   },
   {
     id: "4",
@@ -52,6 +152,35 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "done",
     reporter: "Sarah Lee",
     createdAt: "2026-03-26",
+    history: [
+      {
+        id: "h10",
+        bugId: "4",
+        timestamp: "2026-03-26T08:45:00Z",
+        actor: "Sarah Lee",
+        actionType: "created",
+        description: "Created bug: Typo in homepage text",
+      },
+      {
+        id: "h11",
+        bugId: "4",
+        timestamp: "2026-03-27T09:15:00Z",
+        actor: "John Doe",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "todo",
+        newValue: "done",
+        description: "Status changed from To Do to Done",
+      },
+      {
+        id: "h12",
+        bugId: "4",
+        timestamp: "2026-03-27T10:00:00Z",
+        actor: "John Doe",
+        actionType: "comment_added",
+        description: "Added comment: Fixed and deployed",
+      },
+    ],
   },
   {
     id: "5",
@@ -61,6 +190,16 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "todo",
     reporter: "John Doe",
     createdAt: "2026-03-25",
+    history: [
+      {
+        id: "h13",
+        bugId: "5",
+        timestamp: "2026-03-25T10:30:00Z",
+        actor: "John Doe",
+        actionType: "created",
+        description: "Created bug: Search functionality broken",
+      },
+    ],
   },
   {
     id: "6",
@@ -70,6 +209,35 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "in-progress",
     reporter: "Mike Johnson",
     createdAt: "2026-03-24",
+    history: [
+      {
+        id: "h14",
+        bugId: "6",
+        timestamp: "2026-03-24T13:00:00Z",
+        actor: "Mike Johnson",
+        actionType: "created",
+        description: "Created bug: API rate limiting issue",
+      },
+      {
+        id: "h15",
+        bugId: "6",
+        timestamp: "2026-03-25T10:15:00Z",
+        actor: "Emma Wilson",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "todo",
+        newValue: "in-progress",
+        description: "Status changed from To Do to In Progress",
+      },
+      {
+        id: "h16",
+        bugId: "6",
+        timestamp: "2026-03-30T09:45:00Z",
+        actor: "Jane Smith",
+        actionType: "comment_added",
+        description: "Added comment: Implemented rate limiter middleware",
+      },
+    ],
   },
   {
     id: "7",
@@ -79,6 +247,27 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "todo",
     reporter: "Alex Chen",
     createdAt: "2026-03-23",
+    history: [
+      {
+        id: "h17",
+        bugId: "7",
+        timestamp: "2026-03-23T16:20:00Z",
+        actor: "Alex Chen",
+        actionType: "created",
+        description: "Created bug: Server down - 503 errors",
+      },
+      {
+        id: "h18",
+        bugId: "7",
+        timestamp: "2026-03-23T16:30:00Z",
+        actor: "David Park",
+        actionType: "priority_changed",
+        fieldName: "priority",
+        oldValue: "high",
+        newValue: "critical",
+        description: "Priority changed from High to Critical",
+      },
+    ],
   },
   {
     id: "8",
@@ -88,6 +277,35 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "in-progress",
     reporter: "Emma Wilson",
     createdAt: "2026-03-22",
+    history: [
+      {
+        id: "h19",
+        bugId: "8",
+        timestamp: "2026-03-22T11:00:00Z",
+        actor: "Emma Wilson",
+        actionType: "created",
+        description: "Created bug: Database query optimization needed",
+      },
+      {
+        id: "h20",
+        bugId: "8",
+        timestamp: "2026-03-23T09:30:00Z",
+        actor: "Jane Smith",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "todo",
+        newValue: "in-progress",
+        description: "Status changed from To Do to In Progress",
+      },
+      {
+        id: "h21",
+        bugId: "8",
+        timestamp: "2026-03-29T14:00:00Z",
+        actor: "Emma Wilson",
+        actionType: "file_added",
+        description: "File added: query-analysis.pdf",
+      },
+    ],
   },
   {
     id: "9",
@@ -97,6 +315,16 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "todo",
     reporter: "John Doe",
     createdAt: "2026-03-21",
+    history: [
+      {
+        id: "h22",
+        bugId: "9",
+        timestamp: "2026-03-21T15:45:00Z",
+        actor: "John Doe",
+        actionType: "created",
+        description: "Created bug: Navbar not responsive on tablets",
+      },
+    ],
   },
   {
     id: "10",
@@ -106,6 +334,35 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "review",
     reporter: "David Park",
     createdAt: "2026-03-20",
+    history: [
+      {
+        id: "h23",
+        bugId: "10",
+        timestamp: "2026-03-20T10:00:00Z",
+        actor: "David Park",
+        actionType: "created",
+        description: "Created bug: Backup script fails silently",
+      },
+      {
+        id: "h24",
+        bugId: "10",
+        timestamp: "2026-03-21T11:20:00Z",
+        actor: "Mike Johnson",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "in-progress",
+        newValue: "review",
+        description: "Status changed from In Progress to Review",
+      },
+      {
+        id: "h25",
+        bugId: "10",
+        timestamp: "2026-03-30T08:00:00Z",
+        actor: "David Park",
+        actionType: "comment_added",
+        description: "Added comment: Waiting for testing approval",
+      },
+    ],
   },
   {
     id: "11",
@@ -115,6 +372,16 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "todo",
     reporter: "Sarah Lee",
     createdAt: "2026-03-19",
+    history: [
+      {
+        id: "h26",
+        bugId: "11",
+        timestamp: "2026-03-19T14:15:00Z",
+        actor: "Sarah Lee",
+        actionType: "created",
+        description: "Created bug: Wrong spelling in about section",
+      },
+    ],
   },
   {
     id: "12",
@@ -124,6 +391,27 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "review",
     reporter: "Emma Wilson",
     createdAt: "2026-03-18",
+    history: [
+      {
+        id: "h27",
+        bugId: "12",
+        timestamp: "2026-03-18T09:30:00Z",
+        actor: "Emma Wilson",
+        actionType: "created",
+        description: "Created bug: Database indexing missing on users table",
+      },
+      {
+        id: "h28",
+        bugId: "12",
+        timestamp: "2026-03-19T13:00:00Z",
+        actor: "Jane Smith",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "in-progress",
+        newValue: "review",
+        description: "Status changed from In Progress to Review",
+      },
+    ],
   },
   {
     id: "13",
@@ -133,6 +421,27 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "in-progress",
     reporter: "Jane Smith",
     createdAt: "2026-03-17",
+    history: [
+      {
+        id: "h29",
+        bugId: "13",
+        timestamp: "2026-03-17T10:45:00Z",
+        actor: "Jane Smith",
+        actionType: "created",
+        description: "Created bug: Email service integration broken",
+      },
+      {
+        id: "h30",
+        bugId: "13",
+        timestamp: "2026-03-18T08:20:00Z",
+        actor: "Alex Chen",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "todo",
+        newValue: "in-progress",
+        description: "Status changed from To Do to In Progress",
+      },
+    ],
   },
   {
     id: "14",
@@ -142,6 +451,46 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "done",
     reporter: "David Park",
     createdAt: "2026-03-16",
+    history: [
+      {
+        id: "h31",
+        bugId: "14",
+        timestamp: "2026-03-16T07:00:00Z",
+        actor: "David Park",
+        actionType: "created",
+        description: "Created bug: SSL certificate expiring soon",
+      },
+      {
+        id: "h32",
+        bugId: "14",
+        timestamp: "2026-03-16T07:15:00Z",
+        actor: "David Park",
+        actionType: "priority_changed",
+        fieldName: "priority",
+        oldValue: "high",
+        newValue: "critical",
+        description: "Priority changed from High to Critical",
+      },
+      {
+        id: "h33",
+        bugId: "14",
+        timestamp: "2026-03-17T14:30:00Z",
+        actor: "David Park",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "in-progress",
+        newValue: "done",
+        description: "Status changed from In Progress to Done",
+      },
+      {
+        id: "h34",
+        bugId: "14",
+        timestamp: "2026-03-17T14:45:00Z",
+        actor: "David Park",
+        actionType: "comment_added",
+        description: "Added comment: SSL certificate renewed successfully",
+      },
+    ],
   },
   {
     id: "15",
@@ -151,6 +500,27 @@ const PLACEHOLDER_BUGS: Bug[] = [
     status: "done",
     reporter: "Mike Johnson",
     createdAt: "2026-03-15",
+    history: [
+      {
+        id: "h35",
+        bugId: "15",
+        timestamp: "2026-03-15T16:00:00Z",
+        actor: "Mike Johnson",
+        actionType: "created",
+        description: "Created bug: Button text overflow on small screens",
+      },
+      {
+        id: "h36",
+        bugId: "15",
+        timestamp: "2026-03-16T10:30:00Z",
+        actor: "John Doe",
+        actionType: "status_changed",
+        fieldName: "status",
+        oldValue: "todo",
+        newValue: "done",
+        description: "Status changed from To Do to Done",
+      },
+    ],
   },
 ];
 
