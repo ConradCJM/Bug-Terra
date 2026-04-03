@@ -1,6 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import BugHistoryTimeline from "./BugHistoryTimeline";
+
+interface BugHistory {
+  id: string;
+  bugId: string;
+  timestamp: string;
+  actor: string;
+  actionType: string;
+  fieldName?: string;
+  oldValue?: string;
+  newValue?: string;
+  description: string;
+}
 
 interface Bug {
   id: string;
@@ -10,6 +23,7 @@ interface Bug {
   status: "todo" | "in-progress" | "review" | "done";
   reporter: string;
   createdAt: string;
+  history?: BugHistory[];
 }
 
 interface Attachment {
@@ -58,6 +72,7 @@ export default function BugDetailsModal({
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
+  const [activeTab, setActiveTab] = useState<"details" | "history">("details");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -297,9 +312,35 @@ export default function BugDetailsModal({
             </button>
           </div>
 
+          {/* Tab Navigation */}
+          <div className="flex border-b border-slate-200 bg-slate-50 px-6">
+            <button
+              onClick={() => setActiveTab("details")}
+              className={`px-4 py-3 font-semibold text-sm border-b-2 transition-colors ${
+                activeTab === "details"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-slate-600 hover:text-slate-800"
+              }`}
+            >
+              Details
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={`px-4 py-3 font-semibold text-sm border-b-2 transition-colors ${
+                activeTab === "history"
+                  ? "border-blue-500 text-blue-600"
+                  : "border-transparent text-slate-600 hover:text-slate-800"
+              }`}
+            >
+              History
+            </button>
+          </div>
+
           {/* Content - Scrollable */}
           <div className="px-6 py-6 overflow-y-auto flex-1">
-            {/* Badges Row */}
+            {activeTab === "details" ? (
+              <>
+                {/* Details Tab Content */}
             <div className="flex flex-wrap gap-3 mb-6">
               <span
                 className={`text-xs font-semibold px-3 py-1 rounded-full border ${
@@ -469,6 +510,17 @@ export default function BugDetailsModal({
                 Submit Comment
               </button>
             </div>
+              </>
+            ) : (
+              <>
+                {/* History Tab Content */}
+                {bug.history && bug.history.length > 0 ? (
+                  <BugHistoryTimeline history={bug.history} />
+                ) : (
+                  <p className="text-slate-500 text-center py-8">No history available yet.</p>
+                )}
+              </>
+            )}
           </div>
 
           {/* Action Buttons - Always Visible */}
