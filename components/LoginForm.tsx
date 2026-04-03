@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface FormData {
   email: string;
@@ -13,6 +15,9 @@ interface FormErrors {
 }
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { login } = useAuth();
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -85,6 +90,9 @@ export default function LoginForm() {
       const isAuthenticated = true;
 
       if (isAuthenticated) {
+        // Call login from auth context
+        login(formData.email);
+
         setSubmitMessage({
           type: "success",
           text: "Login successful! Redirecting...",
@@ -95,14 +103,18 @@ export default function LoginForm() {
           email: "",
           password: "",
         });
+
+        // Redirect to home after a short delay
+        setTimeout(() => {
+          router.push("/");
+        }, 800);
       } else {
         setSubmitMessage({
           type: "error",
           text: "Invalid email or password",
         });
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     }, 1500);
   };
 

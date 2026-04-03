@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 interface FormData {
   name: string;
@@ -18,6 +20,9 @@ interface FormErrors {
 }
 
 export default function SignupForm() {
+  const router = useRouter();
+  const { signup } = useAuth();
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -140,9 +145,12 @@ export default function SignupForm() {
         profileImage: formData.profileImage?.name || "No image",
       });
 
+      // Call signup from auth context
+      signup(formData.email);
+
       setSubmitMessage({
         type: "success",
-        text: "Account created successfully! Redirecting to login...",
+        text: "Account created successfully! Redirecting to home...",
       });
 
       // Reset form
@@ -154,7 +162,11 @@ export default function SignupForm() {
         profileImage: null,
       });
       setProfileImagePreview(null);
-      setIsLoading(false);
+
+      // Redirect to home after a short delay
+      setTimeout(() => {
+        router.push("/");
+      }, 800);
     }, 1500);
   };
 
