@@ -18,7 +18,7 @@ export default function Home() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link
-              href="/signin"
+              href="/login"
               className="inline-flex items-center justify-center gap-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
             >
               Sign In

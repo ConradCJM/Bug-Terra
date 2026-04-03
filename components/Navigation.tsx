@@ -38,7 +38,7 @@ export default function Navigation() {
           {/* Auth Buttons */}
           <div className="hidden md:flex gap-3">
             <Link
-              href="/signin"
+              href="/login"
               className="text-slate-300 hover:text-white font-semibold py-2 px-4 rounded transition-colors"
             >
               Sign In
@@ -90,7 +90,7 @@ export default function Navigation() {
               Home
             </Link>
             <Link
-              href="/signin"
+              href="/login"
               className="block py-2 px-4 rounded text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
