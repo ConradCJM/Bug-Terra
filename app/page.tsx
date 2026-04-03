@@ -16,7 +16,8 @@ export default function Home() {
               Bug Tracking Made Simple
             </h1>
             <p className="text-xl md:text-2xl text-slate-300 mb-8">
-              Track, manage, and resolve bugs efficiently with our intuitive bug tracking dashboard.
+              Track, manage, and resolve bugs efficiently with our intuitive bug
+              tracking dashboard.
             </p>
           </div>
 
@@ -115,7 +116,8 @@ export default function Home() {
                 Kanban Dashboard
               </h3>
               <p className="text-slate-400">
-                Visualize your bug pipeline with an intuitive Kanban board layout.
+                Visualize your bug pipeline with an intuitive Kanban board
+                layout.
               </p>
             </div>
 
@@ -145,7 +147,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-slate-700 bg-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-slate-400">
-          <p>BugTracker - Your comprehensive bug management solution</p>
+          <p>BugTerra - Your comprehensive bug management solution</p>
         </div>
       </footer>
     </div>
