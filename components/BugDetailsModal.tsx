@@ -23,7 +23,6 @@ interface Bug {
   status: "todo" | "in-progress" | "review" | "done";
   reporter: string;
   createdAt: string;
-  assignee?: string;
   history?: BugHistory[];
 }
 
@@ -58,7 +57,6 @@ interface BugDetailsModalProps {
   bug: Bug;
   isOpen: boolean;
   onClose: () => void;
-  onBugUpdate?: (updatedBug: Bug) => void;
 }
 
 type ResizeHandle = "nw" | "ne" | "sw" | "se" | "n" | "s" | "e" | "w" | null;
@@ -67,7 +65,6 @@ export default function BugDetailsModal({
   bug,
   isOpen,
   onClose,
-  onBugUpdate,
 }: BugDetailsModalProps) {
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(500);
@@ -76,12 +73,6 @@ export default function BugDetailsModal({
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [activeTab, setActiveTab] = useState<"details" | "history">("details");
-  const [showStatusModal, setShowStatusModal] = useState(false);
-  const [showAssignModal, setShowAssignModal] = useState(false);
-  const [newPriority, setNewPriority] = useState<"low" | "medium" | "high" | "critical">(bug.priority);
-  const [newCategory, setNewCategory] = useState(bug.category);
-  const [newStatus, setNewStatus] = useState(bug.status);
-  const [newAssignee, setNewAssignee] = useState<string | undefined>(bug.assignee);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -89,17 +80,6 @@ export default function BugDetailsModal({
   const MAX_WIDTH = 90;
   const MIN_HEIGHT = 300;
   const MAX_HEIGHT = 90;
-
-  // Initialize comments and attachments from bug data
-  useEffect(() => {
-    if (isOpen) {
-      setComments(bug.comments || []);
-      setAttachments((bug.attachments as any) || []);
-      setNewPriority(bug.priority);
-      setNewCategory(bug.category);
-      setNewStatus(bug.status);
-    }
-  }, [isOpen, bug.id]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -149,26 +129,8 @@ export default function BugDetailsModal({
         text: comment,
         timestamp: new Date().toLocaleString(),
       };
-      const updatedComments = [...comments, newComment];
-      setComments(updatedComments);
-      
-      // Update bug with new comment and history
-      const updatedBug: Bug = {
-        ...bug,
-        comments: updatedComments,
-        history: [
-          ...(bug.history || []),
-          {
-            id: `h-${Date.now()}`,
-            bugId: bug.id,
-            timestamp: new Date().toISOString(),
-            actor: "Current User",
-            actionType: "comment_added",
-            description: `Added comment: ${comment.substring(0, 50)}${comment.length > 50 ? "..." : ""}`,
-          },
-        ],
-      };
-      onBugUpdate?.(updatedBug);
+      setComments((prev) => [...prev, newComment]);
+      console.log("Comment submitted:", comment);
       setComment("");
     }
   };
@@ -245,88 +207,6 @@ export default function BugDetailsModal({
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isResizing, width, height]);
-
-  const handleSaveStatusChanges = () => {
-    const historyEntries: BugHistory[] = [];
-
-    if (newPriority !== bug.priority) {
-      historyEntries.push({
-        id: `h-${Date.now()}-1`,
-        bugId: bug.id,
-        timestamp: new Date().toISOString(),
-        actor: "Current User",
-        actionType: "priority_changed",
-        fieldName: "priority",
-        oldValue: bug.priority,
-        newValue: newPriority,
-        description: `Priority changed from ${bug.priority.charAt(0).toUpperCase() + bug.priority.slice(1)} to ${newPriority.charAt(0).toUpperCase() + newPriority.slice(1)}`,
-      });
-    }
-
-    if (newCategory !== bug.category) {
-      historyEntries.push({
-        id: `h-${Date.now()}-2`,
-        bugId: bug.id,
-        timestamp: new Date().toISOString(),
-        actor: "Current User",
-        actionType: "category_changed",
-        fieldName: "category",
-        oldValue: bug.category,
-        newValue: newCategory,
-        description: `Category changed from ${bug.category} to ${newCategory}`,
-      });
-    }
-
-    if (newStatus !== bug.status) {
-      historyEntries.push({
-        id: `h-${Date.now()}-3`,
-        bugId: bug.id,
-        timestamp: new Date().toISOString(),
-        actor: "Current User",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: bug.status,
-        newValue: newStatus,
-        description: `Status changed from ${bug.status.replace("-", " ").toUpperCase()} to ${newStatus.replace("-", " ").toUpperCase()}`,
-      });
-    }
-
-    if (historyEntries.length > 0) {
-      const updatedBug: Bug = {
-        ...bug,
-        priority: newPriority,
-        category: newCategory,
-        status: newStatus,
-        history: [...(bug.history || []), ...historyEntries],
-      };
-      onBugUpdate?.(updatedBug);
-      setShowStatusModal(false);
-    }
-  };
-
-  const handleSaveAssignment = () => {
-    if (newAssignee !== bug.assignee) {
-      const historyEntry: BugHistory = {
-        id: `h-${Date.now()}`,
-        bugId: bug.id,
-        timestamp: new Date().toISOString(),
-        actor: "Current User",
-        actionType: "assigned",
-        fieldName: "assignee",
-        oldValue: bug.assignee || "Not Assigned",
-        newValue: newAssignee || "Not Assigned",
-        description: `Assigned to ${newAssignee || "Not Assigned"}`,
-      };
-
-      const updatedBug: Bug = {
-        ...bug,
-        assignee: newAssignee,
-        history: [...(bug.history || []), historyEntry],
-      };
-      onBugUpdate?.(updatedBug);
-      setShowAssignModal(false);
-    }
-  };
 
   const getCursorStyle = (handle: ResizeHandle): string => {
     const cursorMap: Record<string, string> = {
@@ -515,14 +395,6 @@ export default function BugDetailsModal({
                 </label>
                 <p className="text-slate-600 capitalize">{bug.priority}</p>
               </div>
-
-              {/* Assignee */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Assigned to
-                </label>
-                <p className="text-slate-600">{bug.assignee || "Not Assigned"}</p>
-              </div>
             </div>
 
             {/* Notes Section */}
@@ -651,136 +523,14 @@ export default function BugDetailsModal({
             )}
           </div>
 
-          {/* Status Change Modal */}
-          {showStatusModal && (
-            <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center">
-              <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
-                <h3 className="text-lg font-bold text-slate-800 mb-4">Change Bug Status</h3>
-                
-                {/* Priority Dropdown */}
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Priority</label>
-                  <select
-                    value={newPriority}
-                    onChange={(e) => setNewPriority(e.target.value as any)}
-                    className="w-full border border-slate-300 rounded px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="critical">Critical</option>
-                  </select>
-                </div>
-
-                {/* Category Dropdown */}
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Category</label>
-                  <select
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
-                    className="w-full border border-slate-300 rounded px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="Frontend">Frontend</option>
-                    <option value="Backend">Backend</option>
-                    <option value="Content">Content</option>
-                    <option value="Infrastructure">Infrastructure</option>
-                    <option value="Database">Database</option>
-                  </select>
-                </div>
-
-                {/* Status Dropdown */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Status</label>
-                  <select
-                    value={newStatus}
-                    onChange={(e) => setNewStatus(e.target.value as any)}
-                    className="w-full border border-slate-300 rounded px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="todo">To Do</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="review">Review</option>
-                    <option value="done">Done</option>
-                  </select>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setShowStatusModal(false)}
-                    className="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-semibold py-2 px-4 rounded transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSaveStatusChanges}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Assign Modal */}
-          {showAssignModal && (
-            <div className="fixed inset-0 bg-black/30 z-50 flex items-center justify-center">
-              <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
-                <h3 className="text-lg font-bold text-slate-800 mb-4">Assign Bug</h3>
-                <p className="text-sm text-slate-600 mb-4">Current assignee: <span className="font-semibold">{bug.assignee || "Not Assigned"}</span></p>
-                
-                {/* Team Member Dropdown */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Assign to</label>
-                  <select
-                    value={newAssignee || ""}
-                    onChange={(e) => setNewAssignee(e.target.value || undefined)}
-                    className="w-full border border-slate-300 rounded px-3 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Not Assigned</option>
-                    <option value="John Doe">John Doe</option>
-                    <option value="Jane Smith">Jane Smith</option>
-                    <option value="Mike Johnson">Mike Johnson</option>
-                    <option value="Emma Wilson">Emma Wilson</option>
-                    <option value="Alex Chen">Alex Chen</option>
-                  </select>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => setShowAssignModal(false)}
-                    className="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 font-semibold py-2 px-4 rounded transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSaveAssignment}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Action Buttons - Always Visible */}
-          {/* Action Buttons - Always Visible */}
-          <div className="flex gap-2 border-t border-slate-200 px-6 py-4 bg-slate-50 flex-shrink-0">
-            <button 
-              onClick={() => setShowStatusModal(true)}
-              className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-3 rounded transition-colors text-sm">
+          <div className="flex gap-3 border-t border-slate-200 px-6 py-4 bg-slate-50 flex-shrink-0">
+            <button className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm">
               Change Status
-            </button>
-            <button 
-              onClick={() => setShowAssignModal(true)}
-              className="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-3 rounded transition-colors text-sm">
-              Assign Bug
             </button>
             <button
               onClick={onClose}
-              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 px-3 rounded transition-colors text-sm"
+              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold py-2 px-4 rounded transition-colors text-sm"
             >
               Close
             </button>
