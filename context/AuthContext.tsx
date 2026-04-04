@@ -1,65 +1,109 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabaseClient";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: { email: string } | null;
-  login: (email: string) => void;
-  logout: () => void;
-  signup: (email: string) => void;
+  user: User | null;
+  login: (email: string, password: string) => Promise<{ error: string | null }>;
+  logout: () => Promise<void>;
+  signup: (
+    email: string,
+    password: string,
+  ) => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize from localStorage on mount
   useEffect(() => {
-    const storedAuth = localStorage.getItem("isAuthenticated");
-    const storedUser = localStorage.getItem("user");
+    let isMounted = true;
 
-    if (storedAuth === "true") {
-      setIsAuthenticated(true);
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+    const initializeSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (!isMounted) {
+        return;
       }
-    }
-    setIsLoading(false);
+
+      if (error) {
+        console.error("Failed to initialize auth session", error.message);
+      }
+
+      const currentUser = data.session?.user ?? null;
+      setUser(currentUser);
+      setIsAuthenticated(Boolean(currentUser));
+      setIsLoading(false);
+    };
+
+    initializeSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) {
+        return;
+      }
+
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      setIsAuthenticated(Boolean(currentUser));
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const login = (email: string) => {
-    const userData = { email };
-    setIsAuthenticated(true);
-    setUser(userData);
-    localStorage.setItem("isAuthenticated", "true");
-    localStorage.setItem("user", JSON.stringify(userData));
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return { error: error.message };
+    }
+
+    return { error: null };
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("user");
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Failed to sign out", error.message);
+    }
   };
 
-  const signup = (email: string) => {
-    const userData = { email };
-    setIsAuthenticated(true);
-    setUser(userData);
-    localStorage.setItem("isAuthenticated", "true");
-    localStorage.setItem("user", JSON.stringify(userData));
+  const signup = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      return { error: error.message };
+    }
+
+    return { error: null };
   };
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, login, logout, signup }}
+    >
       {children}
     </AuthContext.Provider>
   );

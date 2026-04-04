@@ -80,42 +80,28 @@ export default function LoginForm() {
     setIsLoading(true);
     setSubmitMessage({ type: "", text: "" });
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Login attempted:", {
-        email: formData.email,
+    const { error } = await login(formData.email, formData.password);
+
+    if (error) {
+      setSubmitMessage({
+        type: "error",
+        text: error,
       });
+      setIsLoading(false);
+      return;
+    }
 
-      // Simulate authentication success
-      const isAuthenticated = true;
+    setSubmitMessage({
+      type: "success",
+      text: "Login successful! Redirecting...",
+    });
 
-      if (isAuthenticated) {
-        // Call login from auth context
-        login(formData.email);
+    setFormData({
+      email: "",
+      password: "",
+    });
 
-        setSubmitMessage({
-          type: "success",
-          text: "Login successful! Redirecting...",
-        });
-
-        // Reset form
-        setFormData({
-          email: "",
-          password: "",
-        });
-
-        // Redirect to home after a short delay
-        setTimeout(() => {
-          router.push("/");
-        }, 800);
-      } else {
-        setSubmitMessage({
-          type: "error",
-          text: "Invalid email or password",
-        });
-        setIsLoading(false);
-      }
-    }, 1500);
+    router.push("/");
   };
 
   const isFormValid = Object.keys(validateForm()).length === 0;
@@ -125,7 +111,9 @@ export default function LoginForm() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Sign In</h1>
-        <p className="text-slate-600">Welcome back! Please sign in to your account</p>
+        <p className="text-slate-600">
+          Welcome back! Please sign in to your account
+        </p>
       </div>
 
       {/* Form Container */}
@@ -133,7 +121,10 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
               Email Address
             </label>
             <input
@@ -154,7 +145,10 @@ export default function LoginForm() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
               Password
             </label>
             <div className="relative">
@@ -176,14 +170,44 @@ export default function LoginForm() {
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
                   </svg>
                 ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3l18 18"
+                    />
                   </svg>
                 )}
               </button>
@@ -195,7 +219,10 @@ export default function LoginForm() {
 
           {/* Forgot Password Link */}
           <div className="text-right">
-            <a href="#" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">
+            <a
+              href="#"
+              className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
+            >
               Forgot password?
             </a>
           </div>
@@ -229,8 +256,11 @@ export default function LoginForm() {
 
         {/* Signup Link */}
         <p className="text-center text-slate-600 text-sm mt-4">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-blue-600 hover:text-blue-700 font-semibold">
+          Don&apos;t have an account?{" "}
+          <a
+            href="/signup"
+            className="text-blue-600 hover:text-blue-700 font-semibold"
+          >
             Sign up
           </a>
         </p>

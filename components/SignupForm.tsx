@@ -35,7 +35,7 @@ export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [profileImagePreview, setProfileImagePreview] = useState<string | null>(
-    null
+    null,
   );
   const [submitMessage, setSubmitMessage] = useState({ type: "", text: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -136,38 +136,32 @@ export default function SignupForm() {
     setIsLoading(true);
     setSubmitMessage({ type: "", text: "" });
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Form submitted:", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        profileImage: formData.profileImage?.name || "No image",
-      });
+    const { error } = await signup(formData.email, formData.password);
 
-      // Call signup from auth context
-      signup(formData.email);
-
+    if (error) {
       setSubmitMessage({
-        type: "success",
-        text: "Account created successfully! Redirecting to home...",
+        type: "error",
+        text: error,
       });
+      setIsLoading(false);
+      return;
+    }
 
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        profileImage: null,
-      });
-      setProfileImagePreview(null);
+    setSubmitMessage({
+      type: "success",
+      text: "Account created successfully! Redirecting to home...",
+    });
 
-      // Redirect to home after a short delay
-      setTimeout(() => {
-        router.push("/");
-      }, 800);
-    }, 1500);
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      profileImage: null,
+    });
+    setProfileImagePreview(null);
+
+    router.push("/");
   };
 
   const isFormValid = Object.keys(validateForm()).length === 0;
@@ -185,7 +179,10 @@ export default function SignupForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name Field */}
           <div>
-            <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
               Full Name
             </label>
             <input
@@ -206,7 +203,10 @@ export default function SignupForm() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
               Email Address
             </label>
             <input
@@ -227,7 +227,10 @@ export default function SignupForm() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-semibold text-slate-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
               Password
             </label>
             <div className="relative">
@@ -249,14 +252,44 @@ export default function SignupForm() {
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
                   </svg>
                 ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3l18 18"
+                    />
                   </svg>
                 )}
               </button>
@@ -268,7 +301,10 @@ export default function SignupForm() {
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-semibold text-slate-700 mb-1">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-semibold text-slate-700 mb-1"
+            >
               Confirm Password
             </label>
             <div className="relative">
@@ -290,27 +326,60 @@ export default function SignupForm() {
                 aria-label="Toggle confirm password visibility"
               >
                 {showConfirmPassword ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
                   </svg>
                 ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3l18 18"
+                    />
                   </svg>
                 )}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-red-600 text-xs mt-1">{errors.confirmPassword}</p>
+              <p className="text-red-600 text-xs mt-1">
+                {errors.confirmPassword}
+              </p>
             )}
           </div>
 
           {/* Profile Image Section */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Profile Image <span className="text-slate-500 font-normal">(Optional)</span>
+              Profile Image{" "}
+              <span className="text-slate-500 font-normal">(Optional)</span>
             </label>
             {profileImagePreview ? (
               <div className="relative inline-block mb-3">
@@ -325,15 +394,35 @@ export default function SignupForm() {
                   className="absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 transition-colors"
                   aria-label="Remove image"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
             ) : (
               <div className="flex items-center justify-center w-24 h-24 bg-slate-100 rounded-lg border-2 border-dashed border-slate-300 mb-3">
-                <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <svg
+                  className="w-8 h-8 text-slate-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
                 </svg>
               </div>
             )}
@@ -348,8 +437,18 @@ export default function SignupForm() {
               htmlFor="profileImage"
               className="inline-flex items-center gap-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded cursor-pointer transition-colors text-sm"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               Upload Image
             </label>
@@ -385,7 +484,10 @@ export default function SignupForm() {
         {/* Login Link */}
         <p className="text-center text-slate-600 text-sm mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
+          <a
+            href="/login"
+            className="text-blue-600 hover:text-blue-700 font-semibold"
+          >
             Sign in
           </a>
         </p>
