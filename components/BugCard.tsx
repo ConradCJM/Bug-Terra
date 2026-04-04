@@ -20,7 +20,7 @@ const CATEGORY_COLORS = {
   Database: "bg-indigo-50 text-indigo-700",
 };
 
-export default function BugCard({ bug }: { bug: Bug }) {
+export default function BugCard({ bug, onBugUpdate }: { bug: Bug; onBugUpdate?: (updatedBug: Bug) => void }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -84,6 +84,7 @@ export default function BugCard({ bug }: { bug: Bug }) {
         bug={bug as Bug & { status: "todo" | "in-progress" | "review" | "done" }}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onBugUpdate={onBugUpdate}
       />
     </>
   );

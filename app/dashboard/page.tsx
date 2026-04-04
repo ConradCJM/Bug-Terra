@@ -545,6 +545,13 @@ export default function Dashboard() {
     setIsDetailsOpen(true);
   };
 
+  const handleBugUpdate = (updatedBug: Bug) => {
+    setBugs((prevBugs) =>
+      prevBugs.map((bug) => (bug.id === updatedBug.id ? updatedBug : bug))
+    );
+    setSelectedBug(updatedBug);
+  };
+
   const togglePriority = (priority: string) => {
     setSelectedPriorities((prev) =>
       prev.includes(priority)
@@ -711,7 +718,7 @@ export default function Dashboard() {
                 <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
                   {getBugsByStatus(column.id).length > 0 ? (
                     getBugsByStatus(column.id).map((bug) => (
-                      <BugCard key={bug.id} bug={bug} />
+                      <BugCard key={bug.id} bug={bug} onBugUpdate={handleBugUpdate} />
                     ))
                   ) : (
                     <div className="flex items-center justify-center h-32 text-slate-500">
@@ -731,6 +738,7 @@ export default function Dashboard() {
           bug={selectedBug as Bug & { status: "todo" | "in-progress" | "review" | "done" }}
           isOpen={isDetailsOpen}
           onClose={() => setIsDetailsOpen(false)}
+          onBugUpdate={handleBugUpdate}
         />
       )}
     </div>

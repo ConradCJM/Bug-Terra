@@ -29,6 +29,7 @@ export default function BugDetailsModal({
   bug,
   isOpen,
   onClose,
+  onBugUpdate,
 }: BugDetailsModalProps) {
   const [bugData, setBugData] = useState<Bug>(bug);
   const [width, setWidth] = useState(600);
@@ -107,6 +108,9 @@ export default function BugDetailsModal({
     setBugData(updatedBug);
     setShowStatusForm(false);
     console.log("Bug updated:", updatedBug);
+    if (onBugUpdate) {
+      onBugUpdate(updatedBug);
+    }
   };
 
   const handleAssignBug = (assignee: string | undefined) => {
@@ -114,6 +118,9 @@ export default function BugDetailsModal({
     setBugData(updatedBug);
     setShowAssignForm(false);
     console.log("Bug assigned to:", assignee || "Unassigned");
+    if (onBugUpdate) {
+      onBugUpdate(updatedBug);
+    }
   };
 
   useEffect(() => {
