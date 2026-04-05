@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bug } from "@/app/types/bug";
+import { Bug } from "@/types/bug";
 
 interface AssignBugFormProps {
   bug: Bug;
@@ -21,7 +21,7 @@ export default function AssignBugForm({
   onCancel,
 }: AssignBugFormProps) {
   const [selectedAssignee, setSelectedAssignee] = useState<string | undefined>(
-    bug.assignee
+    bug.assignee,
   );
 
   const handleSave = () => {
@@ -30,9 +30,7 @@ export default function AssignBugForm({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-      <div
-        className="pointer-events-auto bg-white rounded-lg shadow-2xl p-6 max-w-md w-full border border-slate-200"
-      >
+      <div className="pointer-events-auto bg-white rounded-lg shadow-2xl p-6 max-w-md w-full border border-slate-200">
         <h3 className="text-xl font-bold text-slate-900 mb-4">Assign Bug</h3>
 
         {/* Current Assignee Info */}
@@ -52,9 +50,7 @@ export default function AssignBugForm({
           </label>
           <select
             value={selectedAssignee || ""}
-            onChange={(e) =>
-              setSelectedAssignee(e.target.value || undefined)
-            }
+            onChange={(e) => setSelectedAssignee(e.target.value || undefined)}
             className="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">-- Unassigned --</option>
@@ -88,10 +84,7 @@ export default function AssignBugForm({
       </div>
 
       {/* Backdrop - No blur to prevent double blur effect */}
-      <div
-        className="fixed inset-0 bg-black/0 z-40"
-        onClick={onCancel}
-      />
+      <div className="fixed inset-0 bg-black/0 z-40" onClick={onCancel} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bug } from "@/app/types/bug";
+import { Bug } from "@/types/bug";
 
 interface StatusChangeFormProps {
   bug: Bug;
@@ -41,10 +41,10 @@ export default function StatusChangeForm({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-      <div
-        className="pointer-events-auto bg-white rounded-lg shadow-2xl p-6 max-w-md w-full border border-slate-200"
-      >
-        <h3 className="text-xl font-bold text-slate-900 mb-4">Change Bug Details</h3>
+      <div className="pointer-events-auto bg-white rounded-lg shadow-2xl p-6 max-w-md w-full border border-slate-200">
+        <h3 className="text-xl font-bold text-slate-900 mb-4">
+          Change Bug Details
+        </h3>
 
         {/* Status */}
         <div className="mb-4">
@@ -119,10 +119,7 @@ export default function StatusChangeForm({
       </div>
 
       {/* Backdrop - No blur to prevent double blur effect */}
-      <div
-        className="fixed inset-0 bg-black/0 z-40"
-        onClick={onCancel}
-      />
+      <div className="fixed inset-0 bg-black/0 z-40" onClick={onCancel} />
     </div>
   );
 }
