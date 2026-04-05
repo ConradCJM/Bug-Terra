@@ -6,6 +6,8 @@ import RecentBugsSection from "@/components/RecentBugsSection";
 import BugDetailsModal from "@/components/BugDetailsModal";
 import { Bug } from "@/types/bug";
 import { supabase } from "@/lib/supabaseClient";
+import { useBugDragDrop } from "@/hooks/useBugDragDrop";
+import { DraggedBugData, ColumnStatus, toDbStatus } from "@/types/dragDrop";
 
 const KANBAN_COLUMNS = [
   { id: "todo", title: "To Do", color: "bg-gray-100" },
@@ -80,6 +82,10 @@ export default function Dashboard() {
   const [isPriorityDropdownOpen, setIsPriorityDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState<string | null>(null);
+
+  // Drag and drop state
+  const dragDrop = useBugDragDrop();
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -146,6 +152,75 @@ export default function Dashboard() {
       prevBugs.map((bug) => (bug.id === updatedBug.id ? updatedBug : bug)),
     );
     setSelectedBug(updatedBug);
+  };
+
+  const handleBugDrop = async (bugData: DraggedBugData, newStatus: ColumnStatus) => {
+    // Prevent moving to the same status
+    if (bugData.status === newStatus) {
+      dragDrop.resetDragState();
+      return;
+    }
+
+    const bugId = bugData.id;
+    // Try parsing as number if it looks like a number
+    const parsedBugId = isNaN(Number(bugId)) ? bugId : Number(bugId);
+    
+    setIsUpdatingStatus(bugId);
+
+    // Convert UI status (with hyphens) to DB status (with underscores)
+    const dbStatus = toDbStatus(newStatus);
+
+    // Debug logging
+    console.log("Attempting to update bug:", {
+      bugId,
+      parsedBugId,
+      oldStatus: bugData.status,
+      newStatus,
+      dbStatus,
+      teamId: curteam?.id,
+    });
+
+    try {
+      // Update local state optimistically
+      setBugs((prevBugs) =>
+        prevBugs.map((bug) =>
+          bug.id === bugId ? { ...bug, status: newStatus } : bug
+        )
+      );
+
+      // Update database with converted status
+      const { error } = await supabase
+        .from("bugs")
+        .update({ status: dbStatus })
+        .eq("id", parsedBugId);
+
+      if (error) {
+        console.error("Error updating bug status - Code:", error.code);
+        console.error("Error updating bug status - Message:", error.message);
+        console.error("Error updating bug status - Full:", error);
+        
+        // Revert optimistic update on error
+        setBugs((prevBugs) =>
+          prevBugs.map((bug) =>
+            bug.id === bugId ? { ...bug, status: bugData.status } : bug
+          )
+        );
+        // Optionally show error notification here
+      } else {
+        console.log("Bug status updated successfully:", bugId, "to", dbStatus);
+      }
+    } catch (error) {
+      console.error("Failed to update bug status - Exception:", error);
+      // Revert optimistic update
+      setBugs((prevBugs) =>
+        prevBugs.map((bug) =>
+          bug.id === bugId ? { ...bug, status: bugData.status } : bug
+        )
+      );
+    } finally {
+      setIsUpdatingStatus(null);
+      dragDrop.resetDragState();
+    }
   };
 
   const togglePriority = (priority: string) => {
@@ -364,7 +439,26 @@ export default function Dashboard() {
             {KANBAN_COLUMNS.map((column) => (
               <div
                 key={column.id}
-                className={`rounded-lg overflow-hidden ${column.color} min-h-96`}
+                className={`rounded-lg overflow-hidden ${column.color} min-h-96 transition-all duration-150 ${
+                  dragDrop.dragOverColumn === column.id
+                    ? "ring-2 ring-blue-400 bg-blue-50"
+                    : ""
+                }`}
+                onDragOver={dragDrop.handleDragOver}
+                onDragEnter={(e) =>
+                  dragDrop.handleDragEnter(e, column.id as ColumnStatus)
+                }
+                onDragLeave={(e) =>
+                  dragDrop.handleDragLeave(e, column.id as ColumnStatus)
+                }
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const bugDataStr = e.dataTransfer.getData("application/json");
+                  if (bugDataStr) {
+                    const bugData: DraggedBugData = JSON.parse(bugDataStr);
+                    handleBugDrop(bugData, column.id as ColumnStatus);
+                  }
+                }}
               >
                 {/* Column Header */}
                 <div className="bg-slate-700 px-4 py-3 border-b border-slate-600">
@@ -384,6 +478,8 @@ export default function Dashboard() {
                         key={bug.id}
                         bug={bug}
                         onBugUpdate={handleBugUpdate}
+                        onDragStart={dragDrop.handleDragStart}
+                        isDragging={dragDrop.isDragging && dragDrop.draggingBugId === bug.id}
                       />
                     ))
                   ) : (

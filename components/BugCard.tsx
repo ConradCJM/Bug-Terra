@@ -3,6 +3,7 @@
 import { useState } from "react";
 import BugDetailsModal from "./BugDetailsModal";
 import { Bug } from "@/types/bug";
+import { DraggedBugData } from "@/types/dragDrop";
 
 const PRIORITY_COLORS = {
   low: "bg-green-100 text-green-800 border-green-300",
@@ -22,17 +23,33 @@ const CATEGORY_COLORS = {
 export default function BugCard({
   bug,
   onBugUpdate,
+  onDragStart,
+  isDragging,
 }: {
   bug: Bug;
   onBugUpdate?: (updatedBug: Bug) => void;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>, bugData: DraggedBugData) => void;
+  isDragging?: boolean;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
       <div
-        className="bg-white rounded-lg shadow-md p-4 cursor-move hover:shadow-lg transition-shadow hover:scale-105 transform duration-200 border border-slate-200"
+        className={`bg-white rounded-lg shadow-md p-4 cursor-move hover:shadow-lg transition-shadow hover:scale-105 transform duration-200 border border-slate-200 ${
+          isDragging ? "opacity-50 cursor-grabbing" : ""
+        }`}
         draggable
+        onDragStart={(e) => {
+          if (onDragStart) {
+            const dragData: DraggedBugData = {
+              id: bug.id,
+              name: bug.name,
+              status: bug.status as "todo" | "in-progress" | "review" | "done",
+            };
+            onDragStart(e, dragData);
+          }
+        }}
       >
         {/* Priority Badge */}
         <div className="flex items-start justify-between mb-3">
