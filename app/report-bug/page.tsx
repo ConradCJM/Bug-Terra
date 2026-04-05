@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { Attachment } from "@/app/types/attachment";
+import { Attachment } from "@/types/attachment";
 
 interface FormErrors {
   title?: string;
@@ -38,7 +38,13 @@ export default function ReportBug() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const categories = ["Frontend", "Backend", "Content", "Infrastructure", "Database"];
+  const categories = [
+    "Frontend",
+    "Backend",
+    "Content",
+    "Infrastructure",
+    "Database",
+  ];
   const priorities = ["low", "medium", "high", "critical"];
 
   const validateForm = (): boolean => {
@@ -71,7 +77,9 @@ export default function ReportBug() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -197,7 +205,9 @@ export default function ReportBug() {
       <header className="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-white">Report a Bug</h1>
-          <p className="text-slate-400 mt-2">Help us improve by reporting issues you encounter</p>
+          <p className="text-slate-400 mt-2">
+            Help us improve by reporting issues you encounter
+          </p>
         </div>
       </header>
 
@@ -232,7 +242,10 @@ export default function ReportBug() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Bug Title */}
                 <div>
-                  <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-semibold text-slate-700 mb-2"
+                  >
                     Bug Title <span className="text-red-600">*</span>
                   </label>
                   <input
@@ -243,10 +256,14 @@ export default function ReportBug() {
                     onChange={handleInputChange}
                     placeholder="Brief description of the bug"
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${
-                      errors.title ? "border-red-500 bg-red-50" : "border-slate-300"
+                      errors.title
+                        ? "border-red-500 bg-red-50"
+                        : "border-slate-300"
                     }`}
                   />
-                  {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title}</p>}
+                  {errors.title && (
+                    <p className="text-red-600 text-sm mt-1">{errors.title}</p>
+                  )}
                 </div>
 
                 {/* Reporter Name */}
@@ -265,11 +282,15 @@ export default function ReportBug() {
                     onChange={handleInputChange}
                     placeholder="Your name"
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${
-                      errors.reporter ? "border-red-500 bg-red-50" : "border-slate-300"
+                      errors.reporter
+                        ? "border-red-500 bg-red-50"
+                        : "border-slate-300"
                     }`}
                   />
                   {errors.reporter && (
-                    <p className="text-red-600 text-sm mt-1">{errors.reporter}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.reporter}
+                    </p>
                   )}
                 </div>
               </div>
@@ -290,11 +311,15 @@ export default function ReportBug() {
                   placeholder="Describe the bug in detail (minimum 10 characters)"
                   rows={5}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors resize-none text-black ${
-                    errors.description ? "border-red-500 bg-red-50" : "border-slate-300"
+                    errors.description
+                      ? "border-red-500 bg-red-50"
+                      : "border-slate-300"
                   }`}
                 />
                 {errors.description && (
-                  <p className="text-red-600 text-sm mt-1">{errors.description}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.description}
+                  </p>
                 )}
                 <p className="text-slate-500 text-xs mt-1">
                   {formData.description.length} characters
@@ -317,7 +342,9 @@ export default function ReportBug() {
                     value={formData.category}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${
-                      errors.category ? "border-red-500 bg-red-50" : "border-slate-300"
+                      errors.category
+                        ? "border-red-500 bg-red-50"
+                        : "border-slate-300"
                     }`}
                   >
                     {categories.map((cat) => (
@@ -327,7 +354,9 @@ export default function ReportBug() {
                     ))}
                   </select>
                   {errors.category && (
-                    <p className="text-red-600 text-sm mt-1">{errors.category}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.category}
+                    </p>
                   )}
                 </div>
 
@@ -345,7 +374,9 @@ export default function ReportBug() {
                     value={formData.priority}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${
-                      errors.priority ? "border-red-500 bg-red-50" : "border-slate-300"
+                      errors.priority
+                        ? "border-red-500 bg-red-50"
+                        : "border-slate-300"
                     }`}
                   >
                     {priorities.map((pri) => (
@@ -355,7 +386,9 @@ export default function ReportBug() {
                     ))}
                   </select>
                   {errors.priority && (
-                    <p className="text-red-600 text-sm mt-1">{errors.priority}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.priority}
+                    </p>
                   )}
                 </div>
               </div>
@@ -379,7 +412,12 @@ export default function ReportBug() {
                     onClick={() => fileInputRef.current?.click()}
                     className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -421,7 +459,9 @@ export default function ReportBug() {
                           )}
                           <button
                             type="button"
-                            onClick={() => handleDeleteAttachment(attachment.id)}
+                            onClick={() =>
+                              handleDeleteAttachment(attachment.id)
+                            }
                             className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                             title="Delete attachment"
                           >
@@ -477,7 +517,11 @@ export default function ReportBug() {
               >
                 {isSubmitting ? (
                   <>
-                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <svg
+                      className="animate-spin h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
                       <circle
                         className="opacity-25"
                         cx="12"
@@ -505,9 +549,9 @@ export default function ReportBug() {
         {/* Info Box */}
         <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-blue-900 text-sm">
-            <span className="font-semibold">Pro Tip:</span> Include as many details as possible,
-            such as steps to reproduce the bug, expected vs actual behavior, and screenshots or
-            videos when applicable.
+            <span className="font-semibold">Pro Tip:</span> Include as many
+            details as possible, such as steps to reproduce the bug, expected vs
+            actual behavior, and screenshots or videos when applicable.
           </p>
         </div>
       </main>

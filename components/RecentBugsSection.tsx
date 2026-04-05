@@ -1,7 +1,6 @@
 "use client";
-import { Bug } from "@/app/types/bug";
-import { RecentBugsSectionProps } from "@/app/types/recentBugsSectionProps";
-
+import { Bug } from "@/types/bug";
+import { RecentBugsSectionProps } from "@/types/recentBugsSectionProps";
 
 const PRIORITY_BADGES = {
   low: "bg-green-100 text-green-800",
@@ -10,9 +9,10 @@ const PRIORITY_BADGES = {
   critical: "bg-red-100 text-red-800",
 };
 
-
-
-export default function RecentBugsSection({ bugs, onBugClick }: RecentBugsSectionProps) {
+export default function RecentBugsSection({
+  bugs,
+  onBugClick,
+}: RecentBugsSectionProps) {
   return (
     <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
       {/* Header */}
@@ -42,7 +42,9 @@ export default function RecentBugsSection({ bugs, onBugClick }: RecentBugsSectio
                     </h3>
                     <span
                       className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                        PRIORITY_BADGES[bug.priority]
+                        PRIORITY_BADGES[
+                          bug.priority as keyof typeof PRIORITY_BADGES
+                        ]
                       }`}
                     >
                       {bug.priority.charAt(0).toUpperCase() +

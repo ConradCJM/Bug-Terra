@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import BugDetailsModal from "./BugDetailsModal";
-import { Bug } from "@/app/types/bug";
-
+import { Bug } from "@/types/bug";
 
 const PRIORITY_COLORS = {
   low: "bg-green-100 text-green-800 border-green-300",
@@ -20,7 +19,13 @@ const CATEGORY_COLORS = {
   Database: "bg-indigo-50 text-indigo-700",
 };
 
-export default function BugCard({ bug, onBugUpdate }: { bug: Bug; onBugUpdate?: (updatedBug: Bug) => void }) {
+export default function BugCard({
+  bug,
+  onBugUpdate,
+}: {
+  bug: Bug;
+  onBugUpdate?: (updatedBug: Bug) => void;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -81,7 +86,9 @@ export default function BugCard({ bug, onBugUpdate }: { bug: Bug; onBugUpdate?: 
 
       {/* Modal */}
       <BugDetailsModal
-        bug={bug as Bug & { status: "todo" | "in-progress" | "review" | "done" }}
+        bug={
+          bug as Bug & { status: "todo" | "in-progress" | "review" | "done" }
+        }
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onBugUpdate={onBugUpdate}

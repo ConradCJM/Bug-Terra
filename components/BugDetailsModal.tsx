@@ -4,10 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import BugHistoryTimeline from "./BugHistoryTimeline";
 import StatusChangeForm from "./StatusChangeForm";
 import AssignBugForm from "./AssignBugForm";
-import { Attachment } from "@/app/types/attachment";
-import { Comment } from "@/app/types/comment";
-import { BugDetailsModalProps } from "@/app/types/bugDetailsModalProps";
-import { Bug } from "@/app/types/bug";
+import { Attachment } from "@/types/attachment";
+import { Comment } from "@/types/comment";
+import { BugDetailsModalProps } from "@/types/bugDetailsModalProps";
+import { Bug } from "@/types/bug";
 
 const PRIORITY_COLORS = {
   low: "bg-green-100 text-green-800 border-green-300",
@@ -17,10 +17,10 @@ const PRIORITY_COLORS = {
 };
 
 const STATUS_COLORS = {
-  "todo": "bg-gray-100 text-gray-800",
+  todo: "bg-gray-100 text-gray-800",
   "in-progress": "bg-blue-100 text-blue-800",
-  "review": "bg-yellow-100 text-yellow-800",
-  "done": "bg-green-100 text-green-800",
+  review: "bg-yellow-100 text-yellow-800",
+  done: "bg-green-100 text-green-800",
 };
 
 type ResizeHandle = "nw" | "ne" | "sw" | "se" | "n" | "s" | "e" | "w" | null;
@@ -151,19 +151,19 @@ export default function BugDetailsModal({
       if (isResizing.includes("e")) {
         newWidth = Math.min(
           Math.max(e.clientX - rect.left, MIN_WIDTH),
-          maxWidth
+          maxWidth,
         );
       }
       if (isResizing.includes("s")) {
         newHeight = Math.min(
           Math.max(e.clientY - rect.top, MIN_HEIGHT),
-          maxHeight
+          maxHeight,
         );
       }
       if (isResizing.includes("w")) {
         const newW = Math.min(
           Math.max(rect.right - e.clientX, MIN_WIDTH),
-          maxWidth
+          maxWidth,
         );
         if (newW !== width) {
           newWidth = newW;
@@ -172,7 +172,7 @@ export default function BugDetailsModal({
       if (isResizing.includes("n")) {
         const newH = Math.min(
           Math.max(rect.bottom - e.clientY, MIN_HEIGHT),
-          maxHeight
+          maxHeight,
         );
         if (newH !== height) {
           newHeight = newH;
@@ -329,196 +329,229 @@ export default function BugDetailsModal({
             {activeTab === "details" ? (
               <>
                 {/* Details Tab Content */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              <span
-                className={`text-xs font-semibold px-3 py-1 rounded-full border ${
-                  PRIORITY_COLORS[bugData.priority]
-                }`}
-              >
-                {bugData.priority.charAt(0).toUpperCase() + bugData.priority.slice(1)}{" "}
-                Priority
-              </span>
-              <span
-                className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                  STATUS_COLORS[bugData.status as keyof typeof STATUS_COLORS]
-                }`}
-              >
-                {bugData.status.replace("-", " ").toUpperCase()}
-              </span>
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">
-                {bugData.category}
-              </span>
-              {bugData.assignee && (
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 text-purple-800">
-                  👤 {bugData.assignee}
-                </span>
-              )}
-            </div>
+                <div className="flex flex-wrap gap-3 mb-6">
+                  <span
+                    className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                      PRIORITY_COLORS[bugData.priority]
+                    }`}
+                  >
+                    {bugData.priority.charAt(0).toUpperCase() +
+                      bugData.priority.slice(1)}{" "}
+                    Priority
+                  </span>
+                  <span
+                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                      STATUS_COLORS[
+                        bugData.status as keyof typeof STATUS_COLORS
+                      ]
+                    }`}
+                  >
+                    {bugData.status.replace("-", " ").toUpperCase()}
+                  </span>
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">
+                    {bugData.category}
+                  </span>
+                  {bugData.assignee && (
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 text-purple-800">
+                      👤 {bugData.assignee}
+                    </span>
+                  )}
+                </div>
 
-            {/* Details Grid */}
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              {/* Reporter */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Reported By
-                </label>
-                <p className="text-slate-600">{bugData.reporter}</p>
-              </div>
+                {/* Details Grid */}
+                <div className="grid md:grid-cols-2 gap-6 mb-6">
+                  {/* Reporter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Reported By
+                    </label>
+                    <p className="text-slate-600">{bugData.reporter}</p>
+                  </div>
 
-              {/* Date */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Created Date
-                </label>
-                <p className="text-slate-600">{bugData.createdAt}</p>
-              </div>
+                  {/* Date */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Created Date
+                    </label>
+                    <p className="text-slate-600">{bugData.createdAt}</p>
+                  </div>
 
-              {/* Category */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Category
-                </label>
-                <p className="text-slate-600">{bugData.category}</p>
-              </div>
+                  {/* Category */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Category
+                    </label>
+                    <p className="text-slate-600">{bugData.category}</p>
+                  </div>
 
-              {/* Priority */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Priority Level
-                </label>
-                <p className="text-slate-600 capitalize">{bugData.priority}</p>
-              </div>
+                  {/* Priority */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Priority Level
+                    </label>
+                    <p className="text-slate-600 capitalize">
+                      {bugData.priority}
+                    </p>
+                  </div>
 
-              {/* Status */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Status
-                </label>
-                <p className="text-slate-600 capitalize">{bugData.status.replace("-", " ")}</p>
-              </div>
+                  {/* Status */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Status
+                    </label>
+                    <p className="text-slate-600 capitalize">
+                      {bugData.status.replace("-", " ")}
+                    </p>
+                  </div>
 
-              {/* Assignee */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Assigned To
-                </label>
-                <p className="text-slate-600">{bugData.assignee || "Unassigned"}</p>
-              </div>
-            </div>
+                  {/* Assignee */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Assigned To
+                    </label>
+                    <p className="text-slate-600">
+                      {bugData.assignee || "Unassigned"}
+                    </p>
+                  </div>
+                </div>
 
-            {/* Notes Section */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Notes
-              </label>
-              <div className="bg-slate-50 rounded p-3 text-slate-600 text-sm border border-slate-200">
-                No notes provided yet.
-              </div>
-            </div>
+                {/* Notes Section */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Notes
+                  </label>
+                  <div className="bg-slate-50 rounded p-3 text-slate-600 text-sm border border-slate-200">
+                    No notes provided yet.
+                  </div>
+                </div>
 
-            {/* File Upload Section */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Attachments
-              </label>
-              <div className="mb-3">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept="image/*,video/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  Upload Screenshot/Video
-                </button>
-              </div>
-
-              {/* Attachments Grid */}
-              {attachments.length > 0 && (
-                <div className="grid grid-cols-2 gap-3">
-                  {attachments.map((attachment) => (
-                    <div
-                      key={attachment.id}
-                      className="relative group bg-slate-100 rounded overflow-hidden border border-slate-200"
+                {/* File Upload Section */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Attachments
+                  </label>
+                  <div className="mb-3">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      accept="image/*,video/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition-colors text-sm"
                     >
-                      {attachment.type === "image" ? (
-                        <img
-                          src={attachment.url}
-                          alt="Screenshot"
-                          className="w-full h-32 object-cover"
-                        />
-                      ) : (
-                        <video
-                          src={attachment.url}
-                          className="w-full h-32 object-cover bg-black"
-                          controls
-                        />
-                      )}
-                      <button
-                        onClick={() => handleDeleteAttachment(attachment.id)}
-                        className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Delete attachment"
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                      <p className="text-xs text-slate-600 p-1 truncate bg-slate-50">
-                        {attachment.file.name}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                      Upload Screenshot/Video
+                    </button>
+                  </div>
 
-            {/* Comments Display Section */}
-            {comments.length > 0 && (
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-slate-700 mb-3">
-                  Comments ({comments.length})
-                </label>
-                <div className="space-y-3">
-                  {comments.map((cmt) => (
-                    <div
-                      key={cmt.id}
-                      className="bg-slate-50 border border-slate-200 rounded p-3"
-                    >
-                      <p className="text-slate-700 text-sm">{cmt.text}</p>
-                      <p className="text-xs text-slate-500 mt-1">{cmt.timestamp}</p>
+                  {/* Attachments Grid */}
+                  {attachments.length > 0 && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {attachments.map((attachment) => (
+                        <div
+                          key={attachment.id}
+                          className="relative group bg-slate-100 rounded overflow-hidden border border-slate-200"
+                        >
+                          {attachment.type === "image" ? (
+                            <img
+                              src={attachment.url}
+                              alt="Screenshot"
+                              className="w-full h-32 object-cover"
+                            />
+                          ) : (
+                            <video
+                              src={attachment.url}
+                              className="w-full h-32 object-cover bg-black"
+                              controls
+                            />
+                          )}
+                          <button
+                            onClick={() =>
+                              handleDeleteAttachment(attachment.id)
+                            }
+                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Delete attachment"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                          <p className="text-xs text-slate-600 p-1 truncate bg-slate-50">
+                            {attachment.file.name}
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            )}
 
-            {/* Comment Input Section */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Add Comment
-              </label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Add your comment here..."
-                className="w-full min-h-20 bg-slate-50 border border-slate-200 rounded p-3 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              />
-              <button
-                onClick={handleSubmitComment}
-                disabled={!comment.trim()}
-                className="mt-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded transition-colors text-sm"
-              >
-                Submit Comment
-              </button>
-            </div>
+                {/* Comments Display Section */}
+                {comments.length > 0 && (
+                  <div className="mb-6">
+                    <label className="block text-sm font-semibold text-slate-700 mb-3">
+                      Comments ({comments.length})
+                    </label>
+                    <div className="space-y-3">
+                      {comments.map((cmt) => (
+                        <div
+                          key={cmt.id}
+                          className="bg-slate-50 border border-slate-200 rounded p-3"
+                        >
+                          <p className="text-slate-700 text-sm">{cmt.text}</p>
+                          <p className="text-xs text-slate-500 mt-1">
+                            {cmt.timestamp}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Comment Input Section */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Add Comment
+                  </label>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Add your comment here..."
+                    className="w-full min-h-20 bg-slate-50 border border-slate-200 rounded p-3 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  />
+                  <button
+                    onClick={handleSubmitComment}
+                    disabled={!comment.trim()}
+                    className="mt-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded transition-colors text-sm"
+                  >
+                    Submit Comment
+                  </button>
+                </div>
               </>
             ) : (
               <>
@@ -526,7 +559,9 @@ export default function BugDetailsModal({
                 {bug.history && bug.history.length > 0 ? (
                   <BugHistoryTimeline history={bug.history} />
                 ) : (
-                  <p className="text-slate-500 text-center py-8">No history available yet.</p>
+                  <p className="text-slate-500 text-center py-8">
+                    No history available yet.
+                  </p>
                 )}
               </>
             )}
