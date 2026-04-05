@@ -117,20 +117,41 @@ export default function Dashboard() {
 
       if (error) {
         console.error("Error fetching bugs:", error);
-      } else {
-        const formattedBugs = data.map((bug: any) => ({
-          id: bug.id.toString(),
-          name: bug.title,
-          category: bug.category,
-          priority: bug.priority,
-          status: bug.status,
-          reporter: bug.reported_by,
-          createdAt: bug.created_at,
-          attachments: bug.attachments || [],
-          history: [],
-        }));
-        setBugs(formattedBugs);
+        return;
       }
+
+      if (!data || data.length === 0) {
+        setBugs([]);
+        return;
+      }
+
+      // Get unique reporter IDs
+      const reporterIds = [...new Set(data.map((bug: any) => bug.reported_by))];
+
+      // Fetch profile names for all reporters
+      const { data: profiles, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, name")
+        .in("id", reporterIds);
+
+      const profileMap =
+        profiles?.reduce((acc: any, profile: any) => {
+          acc[profile.id] = profile.name;
+          return acc;
+        }, {}) || {};
+
+      const formattedBugs = data.map((bug: any) => ({
+        id: bug.id.toString(),
+        name: bug.title,
+        category: bug.category,
+        priority: bug.priority,
+        status: bug.status,
+        reporter: profileMap[bug.reported_by] || bug.reported_by,
+        createdAt: bug.created_at,
+        attachments: bug.attachments || [],
+        history: [],
+      }));
+      setBugs(formattedBugs);
     };
 
     fetchBugs();
