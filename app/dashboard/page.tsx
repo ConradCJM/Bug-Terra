@@ -156,6 +156,8 @@ export default function Dashboard() {
         createdAt: bug.created_at,
         attachments: bug.attachments || [],
         history: [],
+        team_id: bug.team_id,
+        assignee: bug.assignee,
       }));
       setBugs(formattedBugs);
     };
@@ -175,7 +177,10 @@ export default function Dashboard() {
     setSelectedBug(updatedBug);
   };
 
-  const handleBugDrop = async (bugData: DraggedBugData, newStatus: ColumnStatus) => {
+  const handleBugDrop = async (
+    bugData: DraggedBugData,
+    newStatus: ColumnStatus,
+  ) => {
     // Prevent moving to the same status
     if (bugData.status === newStatus) {
       dragDrop.resetDragState();
@@ -185,7 +190,7 @@ export default function Dashboard() {
     const bugId = bugData.id;
     // Try parsing as number if it looks like a number
     const parsedBugId = isNaN(Number(bugId)) ? bugId : Number(bugId);
-    
+
     setIsUpdatingStatus(bugId);
 
     // Convert UI status (with hyphens) to DB status (with underscores)
@@ -205,8 +210,8 @@ export default function Dashboard() {
       // Update local state optimistically
       setBugs((prevBugs) =>
         prevBugs.map((bug) =>
-          bug.id === bugId ? { ...bug, status: newStatus } : bug
-        )
+          bug.id === bugId ? { ...bug, status: newStatus } : bug,
+        ),
       );
 
       // Update database with converted status
@@ -219,12 +224,12 @@ export default function Dashboard() {
         console.error("Error updating bug status - Code:", error.code);
         console.error("Error updating bug status - Message:", error.message);
         console.error("Error updating bug status - Full:", error);
-        
+
         // Revert optimistic update on error
         setBugs((prevBugs) =>
           prevBugs.map((bug) =>
-            bug.id === bugId ? { ...bug, status: bugData.status } : bug
-          )
+            bug.id === bugId ? { ...bug, status: bugData.status } : bug,
+          ),
         );
         // Optionally show error notification here
       } else {
@@ -235,8 +240,8 @@ export default function Dashboard() {
       // Revert optimistic update
       setBugs((prevBugs) =>
         prevBugs.map((bug) =>
-          bug.id === bugId ? { ...bug, status: bugData.status } : bug
-        )
+          bug.id === bugId ? { ...bug, status: bugData.status } : bug,
+        ),
       );
     } finally {
       setIsUpdatingStatus(null);
@@ -500,7 +505,10 @@ export default function Dashboard() {
                         bug={bug}
                         onBugUpdate={handleBugUpdate}
                         onDragStart={dragDrop.handleDragStart}
-                        isDragging={dragDrop.isDragging && dragDrop.draggingBugId === bug.id}
+                        isDragging={
+                          dragDrop.isDragging &&
+                          dragDrop.draggingBugId === bug.id
+                        }
                       />
                     ))
                   ) : (
