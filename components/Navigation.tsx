@@ -41,6 +41,12 @@ export default function Navigation() {
                   Dashboard
                 </Link>
                 <Link
+                  href="/teams"
+                  className="text-slate-300 hover:text-white font-semibold py-2 px-4 rounded transition-colors"
+                >
+                  Teams
+                </Link>
+                <Link
                   href="/report-bug"
                   className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition-colors"
                 >

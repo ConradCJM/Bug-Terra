@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import { Attachment } from "@/types/attachment";
+import { supabase } from "@/lib/supabaseClient";
 
 interface FormErrors {
   title?: string;
@@ -11,6 +11,7 @@ interface FormErrors {
   category?: string;
   priority?: string;
   reporter?: string;
+  team?: string;
 }
 
 interface FormData {
@@ -19,6 +20,12 @@ interface FormData {
   category: string;
   priority: string;
   reporter: string;
+  team: string;
+}
+
+interface Team {
+  id: string;
+  name: string;
 }
 
 export default function ReportBug() {
@@ -31,7 +38,74 @@ export default function ReportBug() {
     category: "Frontend",
     priority: "medium",
     reporter: "",
+    team: "",
   });
+
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) return;
+
+        // Fetch user profile name
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("name")
+          .eq("id", user.id)
+          .single();
+
+        if (profileError) {
+          console.error("Error fetching profile:", profileError);
+        } else if (profile) {
+          setUserName(profile.name);
+          setFormData((prev) => ({
+            ...prev,
+            reporter: profile.name,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserTeams = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from("team_members")
+          .select("team_id, teams(id, name)")
+          .eq("user_id", user.id);
+
+        if (error) {
+          console.error("Error fetching teams:", error);
+        } else if (data) {
+          const teamsData = data
+            .map((member: any) => member.teams)
+            .filter((team): team is Team => team && team.id && team.name);
+          setTeams(teamsData);
+        }
+      } catch (error) {
+        console.error("Error fetching user teams:", error);
+      }
+    };
+
+    fetchUserTeams();
+  }, []);
 
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -68,8 +142,8 @@ export default function ReportBug() {
       newErrors.priority = "Priority is required";
     }
 
-    if (!formData.reporter.trim()) {
-      newErrors.reporter = "Reporter name is required";
+    if (!formData.team) {
+      newErrors.team = "Team is required";
     }
 
     setErrors(newErrors);
@@ -151,34 +225,52 @@ export default function ReportBug() {
 
     setIsSubmitting(true);
 
-    // Simulate submission delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // Log form data (would normally send to API)
-    console.log("Bug Report Submitted:", {
-      formData,
-      attachments: attachments.map((a) => ({
+    try {
+      const attachmentsData = attachments.map((a) => ({
         name: a.file.name,
         type: a.type,
         size: a.file.size,
-      })),
-    });
+      }));
 
-    setIsSubmitting(false);
-    setSuccessMessage("Bug report submitted successfully!");
+      // Insert bug into the bugs table
+      const { data, error } = await supabase.from("bugs").insert([
+        {
+          title: formData.title,
+          notes: formData.description,
+          category: formData.category,
+          priority: formData.priority,
+          status: "todo",
+          team_id: formData.team,
+          attachments: attachmentsData,
+        },
+      ]);
 
-    // Reset form after success
-    setTimeout(() => {
-      setFormData({
-        title: "",
-        description: "",
-        category: "Frontend",
-        priority: "medium",
-        reporter: "",
-      });
-      setAttachments([]);
-      setSuccessMessage("");
-    }, 2000);
+      if (error) {
+        throw new Error(JSON.stringify(error));
+      }
+
+      setSuccessMessage("Bug report submitted successfully!");
+
+      // Reset form after success
+      setTimeout(() => {
+        setFormData({
+          title: "",
+          description: "",
+          category: "Frontend",
+          priority: "medium",
+          reporter: "",
+          team: "",
+        });
+        setAttachments([]);
+        setSuccessMessage("");
+        router.push("/dashboard");
+      }, 2000);
+    } catch (error: any) {
+      console.error("Error submitting bug report:", error.message || error);
+      alert(`Failed to submit bug report: ${error.message || "Unknown error"}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -188,6 +280,7 @@ export default function ReportBug() {
       category: "Frontend",
       priority: "medium",
       reporter: "",
+      team: "",
     });
     setAttachments([]);
     setErrors({});
@@ -272,26 +365,16 @@ export default function ReportBug() {
                     htmlFor="reporter"
                     className="block text-sm font-semibold text-slate-700 mb-2"
                   >
-                    Your Name <span className="text-red-600">*</span>
+                    Your Name
                   </label>
                   <input
                     type="text"
                     id="reporter"
                     name="reporter"
                     value={formData.reporter}
-                    onChange={handleInputChange}
-                    placeholder="Your name"
-                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${
-                      errors.reporter
-                        ? "border-red-500 bg-red-50"
-                        : "border-slate-300"
-                    }`}
+                    disabled={true}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-100 text-slate-600 cursor-not-allowed"
                   />
-                  {errors.reporter && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {errors.reporter}
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -391,6 +474,36 @@ export default function ReportBug() {
                     </p>
                   )}
                 </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="team"
+                  className="block text-sm font-semibold text-slate-700 mb-2"
+                >
+                  Team <span className="text-red-600">*</span>
+                </label>
+                <select
+                  id="team"
+                  name="team"
+                  value={formData.team}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${
+                    errors.team
+                      ? "border-red-500 bg-red-50"
+                      : "border-slate-300"
+                  }`}
+                >
+                  <option value="">Select a team</option>
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.team && (
+                  <p className="text-red-600 text-sm mt-1">{errors.team}</p>
+                )}
               </div>
 
               {/* Attachments Section */}

@@ -13,4 +13,5 @@ export interface Bug {
   history?: BugHistory[];
   comments?: Comment[];
   attachments?: Attachment[];
+  team_id?: string;
 }

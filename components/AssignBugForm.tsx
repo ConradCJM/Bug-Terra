@@ -1,19 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bug } from "@/types/bug";
+import { supabase } from "@/lib/supabaseClient";
+
+interface TeamMember {
+  user_id: string;
+  name: string;
+}
 
 interface AssignBugFormProps {
   bug: Bug;
   onSave: (assignee: string | undefined) => void;
   onCancel: () => void;
 }
-
-const TEAM_MEMBERS = [
-  { id: "1", name: "John Doe" },
-  { id: "2", name: "Jane Smith" },
-  { id: "3", name: "Mike Johnson" },
-  { id: "4", name: "Sarah Lee" },
-  { id: "5", name: "Alex Chen" },
-];
 
 export default function AssignBugForm({
   bug,
@@ -23,6 +21,65 @@ export default function AssignBugForm({
   const [selectedAssignee, setSelectedAssignee] = useState<string | undefined>(
     bug.assignee,
   );
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      setLoading(true);
+      try {
+        // Get team members for this bug's team
+        const { data: members, error: membersError } = await supabase
+          .from("team_members")
+          .select("user_id")
+          .eq("team_id", bug.team_id);
+
+        if (membersError) {
+          console.error("Error fetching team members:", membersError);
+          return;
+        }
+
+        if (!members || members.length === 0) {
+          setTeamMembers([]);
+          return;
+        }
+
+        // Extract unique user IDs
+        const userIds = members.map((m: any) => m.user_id);
+
+        // Fetch profile names for these users
+        const { data: profiles, error: profilesError } = await supabase
+          .from("profiles")
+          .select("id, name")
+          .in("id", userIds);
+
+        if (profilesError) {
+          console.error("Error fetching profiles:", profilesError);
+          return;
+        }
+
+        // Combine user IDs with their names
+        const membersWithNames: TeamMember[] = userIds.map((userId: string) => {
+          const profile = profiles?.find((p: any) => p.id === userId);
+          return {
+            user_id: userId,
+            name: profile?.name || userId,
+          };
+        });
+
+        setTeamMembers(membersWithNames);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (bug.team_id) {
+      fetchTeamMembers();
+    } else {
+      setTeamMembers([]);
+      setLoading(false);
+    }
+  }, [bug.team_id]);
 
   const handleSave = () => {
     onSave(selectedAssignee);
@@ -51,11 +108,14 @@ export default function AssignBugForm({
           <select
             value={selectedAssignee || ""}
             onChange={(e) => setSelectedAssignee(e.target.value || undefined)}
-            className="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={loading}
+            className="w-full px-3 py-2 border border-slate-300 rounded bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-slate-100 disabled:text-slate-500"
           >
-            <option value="">-- Unassigned --</option>
-            {TEAM_MEMBERS.map((member) => (
-              <option key={member.id} value={member.name}>
+            <option value="">
+              {loading ? "Loading..." : "-- Unassigned --"}
+            </option>
+            {teamMembers.map((member) => (
+              <option key={member.user_id} value={member.name}>
                 {member.name}
               </option>
             ))}

@@ -1,511 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BugCard from "@/components/BugCard";
 import RecentBugsSection from "@/components/RecentBugsSection";
 import BugDetailsModal from "@/components/BugDetailsModal";
 import { Bug } from "@/types/bug";
-
-// Placeholder data
-const PLACEHOLDER_BUGS: Bug[] = [
-  {
-    id: "1",
-    name: "Login button not responding",
-    category: "Frontend",
-    priority: "high",
-    status: "in-progress",
-    reporter: "John Doe",
-    createdAt: "2026-03-29",
-    assignee: "Jane Smith",
-    history: [
-      {
-        id: "h1",
-        bugId: "1",
-        timestamp: "2026-03-29T14:15:00Z",
-        actor: "John Doe",
-        actionType: "created",
-        description: "Created bug: Login button not responding",
-      },
-      {
-        id: "h2",
-        bugId: "1",
-        timestamp: "2026-03-29T15:45:00Z",
-        actor: "Jane Smith",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "todo",
-        newValue: "in-progress",
-        description: "Status changed from To Do to In Progress",
-      },
-      {
-        id: "h3",
-        bugId: "1",
-        timestamp: "2026-03-30T10:20:00Z",
-        actor: "Mike Johnson",
-        actionType: "comment_added",
-        description: "Added comment: I can reproduce this on Chrome 89",
-      },
-      {
-        id: "h4",
-        bugId: "1",
-        timestamp: "2026-03-30T11:00:00Z",
-        actor: "John Doe",
-        actionType: "priority_changed",
-        fieldName: "priority",
-        oldValue: "high",
-        newValue: "critical",
-        description: "Priority changed from High to Critical",
-      },
-      {
-        id: "h5",
-        bugId: "1",
-        timestamp: "2026-03-30T13:30:00Z",
-        actor: "Emma Wilson",
-        actionType: "file_added",
-        description: "File added: screenshot-bug.png",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Database connection timeout",
-    category: "Backend",
-    priority: "critical",
-    status: "todo",
-    reporter: "Jane Smith",
-    createdAt: "2026-03-28",
-    assignee: "Mike Johnson",
-    history: [
-      {
-        id: "h6",
-        bugId: "2",
-        timestamp: "2026-03-28T09:00:00Z",
-        actor: "Jane Smith",
-        actionType: "created",
-        description: "Created bug: Database connection timeout",
-      },
-      {
-        id: "h7",
-        bugId: "2",
-        timestamp: "2026-03-29T16:30:00Z",
-        actor: "Mike Johnson",
-        actionType: "comment_added",
-        description: "Added comment: Check connection pool settings",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "CSS not loading on mobile",
-    category: "Frontend",
-    priority: "medium",
-    status: "review",
-    reporter: "Mike Johnson",
-    createdAt: "2026-03-27",
-    assignee: "Emma Wilson",
-    history: [
-      {
-        id: "h8",
-        bugId: "3",
-        timestamp: "2026-03-27T11:00:00Z",
-        actor: "Mike Johnson",
-        actionType: "created",
-        description: "Created bug: CSS not loading on mobile",
-      },
-      {
-        id: "h9",
-        bugId: "3",
-        timestamp: "2026-03-28T14:20:00Z",
-        actor: "Emma Wilson",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "in-progress",
-        newValue: "review",
-        description: "Status changed from In Progress to Review",
-      },
-    ],
-  },
-  {
-    id: "4",
-    name: "Typo in homepage text",
-    category: "Content",
-    priority: "low",
-    status: "done",
-    reporter: "Sarah Lee",
-    createdAt: "2026-03-26",
-    assignee: "John Doe",
-    history: [
-      {
-        id: "h10",
-        bugId: "4",
-        timestamp: "2026-03-26T08:45:00Z",
-        actor: "Sarah Lee",
-        actionType: "created",
-        description: "Created bug: Typo in homepage text",
-      },
-      {
-        id: "h11",
-        bugId: "4",
-        timestamp: "2026-03-27T09:15:00Z",
-        actor: "John Doe",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "todo",
-        newValue: "done",
-        description: "Status changed from To Do to Done",
-      },
-      {
-        id: "h12",
-        bugId: "4",
-        timestamp: "2026-03-27T10:00:00Z",
-        actor: "John Doe",
-        actionType: "comment_added",
-        description: "Added comment: Fixed and deployed",
-      },
-    ],
-  },
-  {
-    id: "5",
-    name: "Search functionality broken",
-    category: "Frontend",
-    priority: "high",
-    status: "todo",
-    reporter: "John Doe",
-    createdAt: "2026-03-25",
-    history: [
-      {
-        id: "h13",
-        bugId: "5",
-        timestamp: "2026-03-25T10:30:00Z",
-        actor: "John Doe",
-        actionType: "created",
-        description: "Created bug: Search functionality broken",
-      },
-    ],
-  },
-  {
-    id: "6",
-    name: "API rate limiting issue",
-    category: "Backend",
-    priority: "medium",
-    status: "in-progress",
-    reporter: "Mike Johnson",
-    createdAt: "2026-03-24",
-    assignee: "Sarah Lee",
-    history: [
-      {
-        id: "h14",
-        bugId: "6",
-        timestamp: "2026-03-24T13:00:00Z",
-        actor: "Mike Johnson",
-        actionType: "created",
-        description: "Created bug: API rate limiting issue",
-      },
-      {
-        id: "h15",
-        bugId: "6",
-        timestamp: "2026-03-25T10:15:00Z",
-        actor: "Emma Wilson",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "todo",
-        newValue: "in-progress",
-        description: "Status changed from To Do to In Progress",
-      },
-      {
-        id: "h16",
-        bugId: "6",
-        timestamp: "2026-03-30T09:45:00Z",
-        actor: "Jane Smith",
-        actionType: "comment_added",
-        description: "Added comment: Implemented rate limiter middleware",
-      },
-    ],
-  },
-  {
-    id: "7",
-    name: "Server down - 503 errors",
-    category: "Infrastructure",
-    priority: "critical",
-    status: "todo",
-    reporter: "Alex Chen",
-    createdAt: "2026-03-23",
-    history: [
-      {
-        id: "h17",
-        bugId: "7",
-        timestamp: "2026-03-23T16:20:00Z",
-        actor: "Alex Chen",
-        actionType: "created",
-        description: "Created bug: Server down - 503 errors",
-      },
-      {
-        id: "h18",
-        bugId: "7",
-        timestamp: "2026-03-23T16:30:00Z",
-        actor: "David Park",
-        actionType: "priority_changed",
-        fieldName: "priority",
-        oldValue: "high",
-        newValue: "critical",
-        description: "Priority changed from High to Critical",
-      },
-    ],
-  },
-  {
-    id: "8",
-    name: "Database query optimization needed",
-    category: "Database",
-    priority: "high",
-    status: "in-progress",
-    reporter: "Emma Wilson",
-    createdAt: "2026-03-22",
-    history: [
-      {
-        id: "h19",
-        bugId: "8",
-        timestamp: "2026-03-22T11:00:00Z",
-        actor: "Emma Wilson",
-        actionType: "created",
-        description: "Created bug: Database query optimization needed",
-      },
-      {
-        id: "h20",
-        bugId: "8",
-        timestamp: "2026-03-23T09:30:00Z",
-        actor: "Jane Smith",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "todo",
-        newValue: "in-progress",
-        description: "Status changed from To Do to In Progress",
-      },
-      {
-        id: "h21",
-        bugId: "8",
-        timestamp: "2026-03-29T14:00:00Z",
-        actor: "Emma Wilson",
-        actionType: "file_added",
-        description: "File added: query-analysis.pdf",
-      },
-    ],
-  },
-  {
-    id: "9",
-    name: "Navbar not responsive on tablets",
-    category: "Frontend",
-    priority: "medium",
-    status: "todo",
-    reporter: "John Doe",
-    createdAt: "2026-03-21",
-    history: [
-      {
-        id: "h22",
-        bugId: "9",
-        timestamp: "2026-03-21T15:45:00Z",
-        actor: "John Doe",
-        actionType: "created",
-        description: "Created bug: Navbar not responsive on tablets",
-      },
-    ],
-  },
-  {
-    id: "10",
-    name: "Backup script fails silently",
-    category: "Infrastructure",
-    priority: "high",
-    status: "review",
-    reporter: "David Park",
-    createdAt: "2026-03-20",
-    history: [
-      {
-        id: "h23",
-        bugId: "10",
-        timestamp: "2026-03-20T10:00:00Z",
-        actor: "David Park",
-        actionType: "created",
-        description: "Created bug: Backup script fails silently",
-      },
-      {
-        id: "h24",
-        bugId: "10",
-        timestamp: "2026-03-21T11:20:00Z",
-        actor: "Mike Johnson",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "in-progress",
-        newValue: "review",
-        description: "Status changed from In Progress to Review",
-      },
-      {
-        id: "h25",
-        bugId: "10",
-        timestamp: "2026-03-30T08:00:00Z",
-        actor: "David Park",
-        actionType: "comment_added",
-        description: "Added comment: Waiting for testing approval",
-      },
-    ],
-  },
-  {
-    id: "11",
-    name: "Wrong spelling in about section",
-    category: "Content",
-    priority: "low",
-    status: "todo",
-    reporter: "Sarah Lee",
-    createdAt: "2026-03-19",
-    history: [
-      {
-        id: "h26",
-        bugId: "11",
-        timestamp: "2026-03-19T14:15:00Z",
-        actor: "Sarah Lee",
-        actionType: "created",
-        description: "Created bug: Wrong spelling in about section",
-      },
-    ],
-  },
-  {
-    id: "12",
-    name: "Database indexing missing on users table",
-    category: "Database",
-    priority: "medium",
-    status: "review",
-    reporter: "Emma Wilson",
-    createdAt: "2026-03-18",
-    history: [
-      {
-        id: "h27",
-        bugId: "12",
-        timestamp: "2026-03-18T09:30:00Z",
-        actor: "Emma Wilson",
-        actionType: "created",
-        description: "Created bug: Database indexing missing on users table",
-      },
-      {
-        id: "h28",
-        bugId: "12",
-        timestamp: "2026-03-19T13:00:00Z",
-        actor: "Jane Smith",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "in-progress",
-        newValue: "review",
-        description: "Status changed from In Progress to Review",
-      },
-    ],
-  },
-  {
-    id: "13",
-    name: "Email service integration broken",
-    category: "Backend",
-    priority: "high",
-    status: "in-progress",
-    reporter: "Jane Smith",
-    createdAt: "2026-03-17",
-    history: [
-      {
-        id: "h29",
-        bugId: "13",
-        timestamp: "2026-03-17T10:45:00Z",
-        actor: "Jane Smith",
-        actionType: "created",
-        description: "Created bug: Email service integration broken",
-      },
-      {
-        id: "h30",
-        bugId: "13",
-        timestamp: "2026-03-18T08:20:00Z",
-        actor: "Alex Chen",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "todo",
-        newValue: "in-progress",
-        description: "Status changed from To Do to In Progress",
-      },
-    ],
-  },
-  {
-    id: "14",
-    name: "SSL certificate expiring soon",
-    category: "Infrastructure",
-    priority: "critical",
-    status: "done",
-    reporter: "David Park",
-    createdAt: "2026-03-16",
-    history: [
-      {
-        id: "h31",
-        bugId: "14",
-        timestamp: "2026-03-16T07:00:00Z",
-        actor: "David Park",
-        actionType: "created",
-        description: "Created bug: SSL certificate expiring soon",
-      },
-      {
-        id: "h32",
-        bugId: "14",
-        timestamp: "2026-03-16T07:15:00Z",
-        actor: "David Park",
-        actionType: "priority_changed",
-        fieldName: "priority",
-        oldValue: "high",
-        newValue: "critical",
-        description: "Priority changed from High to Critical",
-      },
-      {
-        id: "h33",
-        bugId: "14",
-        timestamp: "2026-03-17T14:30:00Z",
-        actor: "David Park",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "in-progress",
-        newValue: "done",
-        description: "Status changed from In Progress to Done",
-      },
-      {
-        id: "h34",
-        bugId: "14",
-        timestamp: "2026-03-17T14:45:00Z",
-        actor: "David Park",
-        actionType: "comment_added",
-        description: "Added comment: SSL certificate renewed successfully",
-      },
-    ],
-  },
-  {
-    id: "15",
-    name: "Button text overflow on small screens",
-    category: "Frontend",
-    priority: "low",
-    status: "done",
-    reporter: "Mike Johnson",
-    createdAt: "2026-03-15",
-    history: [
-      {
-        id: "h35",
-        bugId: "15",
-        timestamp: "2026-03-15T16:00:00Z",
-        actor: "Mike Johnson",
-        actionType: "created",
-        description: "Created bug: Button text overflow on small screens",
-      },
-      {
-        id: "h36",
-        bugId: "15",
-        timestamp: "2026-03-16T10:30:00Z",
-        actor: "John Doe",
-        actionType: "status_changed",
-        fieldName: "status",
-        oldValue: "todo",
-        newValue: "done",
-        description: "Status changed from To Do to Done",
-      },
-    ],
-  },
-];
+import { supabase } from "@/lib/supabaseClient";
 
 const KANBAN_COLUMNS = [
   { id: "todo", title: "To Do", color: "bg-gray-100" },
@@ -570,7 +70,9 @@ const CATEGORY_FILTERS = [
 ];
 
 export default function Dashboard() {
-  const [bugs, setBugs] = useState<Bug[]>(PLACEHOLDER_BUGS);
+  const [curteam, setCurTeam] = useState<any>(null);
+  const [teams, setTeams] = useState<any[]>([]);
+  const [bugs, setBugs] = useState<Bug[]>([]);
   const [selectedBug, setSelectedBug] = useState<Bug | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
@@ -578,6 +80,82 @@ export default function Dashboard() {
   const [isPriorityDropdownOpen, setIsPriorityDropdownOpen] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from("team_members")
+        .select("team_id, teams(id, name)")
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error("Error fetching teams:", error);
+      } else if (data && data.length > 0) {
+        const teamsData = data.map((member: any) => member.teams);
+        setTeams(teamsData);
+        setCurTeam(teamsData[0]);
+      }
+    };
+
+    fetchTeams();
+  }, []);
+
+  useEffect(() => {
+    const fetchBugs = async () => {
+      if (!curteam?.id) return;
+
+      const { data, error } = await supabase
+        .from("bugs")
+        .select()
+        .eq("team_id", curteam.id);
+
+      if (error) {
+        console.error("Error fetching bugs:", error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        setBugs([]);
+        return;
+      }
+
+      // Get unique reporter IDs
+      const reporterIds = [...new Set(data.map((bug: any) => bug.reported_by))];
+
+      // Fetch profile names for all reporters
+      const { data: profiles, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, name")
+        .in("id", reporterIds);
+
+      const profileMap =
+        profiles?.reduce((acc: any, profile: any) => {
+          acc[profile.id] = profile.name;
+          return acc;
+        }, {}) || {};
+
+      const formattedBugs = data.map((bug: any) => ({
+        id: bug.id.toString(),
+        name: bug.title,
+        category: bug.category,
+        priority: bug.priority,
+        status: bug.status,
+        reporter: profileMap[bug.reported_by] || bug.reported_by,
+        createdAt: bug.created_at,
+        attachments: bug.attachments || [],
+        history: [],
+      }));
+      setBugs(formattedBugs);
+    };
+
+    fetchBugs();
+  }, [curteam]);
 
   const handleBugClick = (bug: Bug) => {
     setSelectedBug(bug);
@@ -638,6 +216,25 @@ export default function Dashboard() {
           <p className="text-slate-400 mt-2">
             Track and manage all reported bugs
           </p>
+
+          {/* Team Tabs */}
+          {teams.length > 0 && (
+            <div className="mt-6 flex gap-2 border-b border-slate-600 overflow-x-auto pb-4">
+              {teams.map((team) => (
+                <button
+                  key={team.id}
+                  onClick={() => setCurTeam(team)}
+                  className={`px-4 py-2 font-semibold rounded-t-lg whitespace-nowrap transition-colors ${
+                    curteam?.id === team.id
+                      ? "bg-blue-600 text-white border-b-2 border-blue-600"
+                      : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                  }`}
+                >
+                  {team.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
